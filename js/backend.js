@@ -10,25 +10,42 @@ document.addEventListener('DOMContentLoaded', fetchDatabase);
 // ─────────────────────────────────────────────────────────────────────────────
 const functionDatabase = {
     "excel": [
-        { "id":"ex-1",  "titulo":"Ctrl Shortcuts",           "categoria":"Atajos Fundamentales",     "descripcion":"Selección de columna entera (Ctrl+Espacio), saltos al fin del rango (Ctrl+Flechas), abrir Formato de Celdas (Ctrl+1).",            "codigo":"Ctrl + Espacio  →  Selecciona columna entera\nCtrl + 1        →  Formato de Celdas\nCtrl + Fin      →  Última celda con datos" },
-        { "id":"ex-2",  "titulo":"Shift/Alt Shortcuts",      "categoria":"Atajos Fundamentales",     "descripcion":"Shift+Espacio selecciona la fila entera. Alt+H+A+C centra el contenido de la celda activa desde el Ribbon.",                         "codigo":"Shift + Espacio  →  Fila entera\nAlt + H + A + C →  Centrar contenido" },
-        { "id":"ex-3",  "titulo":"+, -, *, /, RAIZ()",       "categoria":"Básicas y Operaciones",    "descripcion":"Operaciones aritméticas elementales. RAIZ() calcula la raíz cuadrada positiva. Siempre inicia la celda con = para activar el motor de cálculo.", "codigo":"=RAIZ(144)  →  12\n=2^8        →  256\n=(A1+B1)*C1 →  Operación combinada" },
-        { "id":"ex-4",  "titulo":"SUMA & PROMEDIO",          "categoria":"Matemáticas Estadísticas", "descripcion":"SUMA() agrega el rango. PROMEDIO() retorna la media aritmética. Ambas ignoran celdas vacías y textos.",                              "codigo":"=SUMA(B2:B6)\n=PROMEDIO(B2:B6)" },
-        { "id":"ex-5",  "titulo":"CONTARA() vs CONTAR()",    "categoria":"Matemáticas Estadísticas", "descripcion":"CONTAR() cuenta solo numéricos. CONTARA() cuenta cualquier celda no vacía, incluyendo texto.",                                        "codigo":"=CONTAR(B2:B6)    →  Cuenta números\n=CONTARA(A2:A6)   →  Cuenta no-vacíos" },
-        { "id":"ex-6",  "titulo":"SUMAR.SI & CONTAR.SI",     "categoria":"Matemáticas Estadísticas", "descripcion":"Suma o cuenta solo los registros que cumplen un criterio. Muy usada para segmentar ventas por región o categoría.",                    "codigo":"=SUMAR.SI(A2:A6,\"Norte\",B2:B6)\n=CONTAR.SI(A2:A6,\"Norte\")" },
-        { "id":"ex-7",  "titulo":"SI() & SIERROR()",         "categoria":"Lógicas y Limpieza",       "descripcion":"SI() evalúa condición y devuelve uno de dos resultados. SIERROR() captura errores devolviendo un valor alternativo seguro.",           "codigo":"=SI(B2>500,\"Alto\",\"Bajo\")\n=SIERROR(BUSCARV(A2,E:F,2,0),\"N/A\")" },
-        { "id":"ex-8",  "titulo":"Y() / O() / NO()",         "categoria":"Lógicas Avanzadas",        "descripcion":"Y() exige que TODAS las condiciones sean verdad. O() basta con que UNA lo sea. Siempre anidados dentro de SI().",                      "codigo":"=SI(Y(B2>100,C2=\"OK\"),\"Aprobado\",\"Rechazado\")" },
-        { "id":"ex-9",  "titulo":"TRIM (ESPACIOS)",          "categoria":"Limpieza Cadenas",         "descripcion":"ESPACIOS() elimina espacios al inicio, al final y duplicados internos. Clave antes de cualquier BUSCARV.",                            "codigo":"=ESPACIOS(A2)" },
-        { "id":"ex-10", "titulo":"VLOOKUP (BUSCARV)",        "categoria":"Búsqueda y Referencia",    "descripcion":"Busca un valor en la primera columna de una tabla y devuelve la columna indicada. FALSO obliga coincidencia exacta.",                 "codigo":"=BUSCARV(A2,$E$2:$G$6,2,FALSO)" },
-        { "id":"ex-11", "titulo":"INDEX & MATCH",            "categoria":"Búsqueda y Referencia",    "descripcion":"INDICE extrae el valor exacto, COINCIDIR calcula la posición. Permite búsquedas hacia la izquierda imposibles con BUSCARV.",          "codigo":"=INDICE(C2:C6,COINCIDIR(A9,A2:A6,0))" },
-        { "id":"ex-12", "titulo":"XLOOKUP (BUSCARX)",        "categoria":"Matrices Dinámicas",       "descripcion":"Evolución de BUSCARV en Microsoft 365. Busca en cualquier dirección, maneja errores nativamente y devuelve múltiples columnas.",       "codigo":"=BUSCARX(A9,A2:A6,C2:C6,\"No encontrado\",0)" },
-        { "id":"ex-13", "titulo":"FILTRAR()",                "categoria":"Matrices Dinámicas",       "descripcion":"Devuelve un subconjunto dinámico del rango. El resultado 'desborda' a celdas adyacentes automáticamente (Spill).",                   "codigo":"=FILTRAR(A2:C6,C2:C6>400)" },
-        { "id":"ex-14", "titulo":"UNIQUE() y ORDENAR()",     "categoria":"Matrices Dinámicas",       "descripcion":"UNIQUE() elimina duplicados del rango. ORDENAR() clasifica el resultado.",                                                           "codigo":"=ORDENAR(UNICOS(A2:A6))" },
-        { "id":"ex-15", "titulo":"Query Folding",            "categoria":"Lenguaje M (ETL)",         "descripcion":"Power Query delega WHERE/GROUP al motor de origen (SQL) en lugar de bajar toda la data localmente.",                                  "codigo":"Table.SelectRows(Source, each [Region] = \"Norte\")" },
-        { "id":"ex-16", "titulo":"Table.Buffer()",           "categoria":"Lenguaje M (ETL)",         "descripcion":"Carga la tabla en RAM eliminando re-evaluaciones costosas. Rompe el query folding pero acelera cruces repetitivos.",                  "codigo":"let\n  Src = Table.Buffer(BaseDatos),\n  Res = Table.Join(Src,...)\nin Res" },
-        { "id":"ex-17", "titulo":"Slicers y Timelines",      "categoria":"Tablas Dinámicas",         "descripcion":"Controles visuales que filtran Tablas Dinámicas. Se conectan via 'Conexiones de informe' a múltiples pivots.",                       "codigo":"Insertar → Segmentación de datos\n→ Clic derecho → Conexiones de informe" }
+        // ATAJOS
+        { "id":"ex-1","titulo":"Ctrl Shortcuts","categoria":"Atajos Fundamentales","descripcion":"Ctrl+Espacio=columna entera. Ctrl+1=Formato de Celdas. Ctrl+Shift+$=moneda. Ctrl+Fin=última celda con dato.","codigo":"Ctrl+Espacio → Columna entera\nCtrl+1       → Formato Celdas\nCtrl+Shift+$ → Formato moneda\nCtrl+Fin     → Última celda" },
+        { "id":"ex-2","titulo":"Shift / Alt Shortcuts","categoria":"Atajos Fundamentales","descripcion":"Shift+Espacio=fila entera. Alt+=inserta SUMA automática. F2=editar celda. Alt+H+A+C=centrar.","codigo":"Shift+Espacio → Fila entera\nAlt+=         → Auto-SUMA\nF2            → Editar celda\nAlt+H+A+C    → Centrar" },
+        // MATEMÁTICAS
+        { "id":"ex-3","titulo":"SUMA & PROMEDIO","categoria":"Matemáticas Estadísticas","descripcion":"SUMA agrega el rango completo. PROMEDIO calcula la media aritmética ignorando celdas vacías. Base de cualquier reporte financiero.","codigo":"=SUMA(B2:B6)\n=PROMEDIO(B2:B6)" },
+        { "id":"ex-4","titulo":"SUMAR.SI.CONJUNTO","categoria":"Matemáticas Estadísticas","descripcion":"Suma registros que cumplen MÚLTIPLES criterios simultáneos. Más poderosa que SUMAR.SI para reportes complejos por región+producto+estado.","codigo":"=SUMAR.SI.CONJUNTO(C2:C6, A2:A6,\"Norte\", B2:B6,\"Laptop\")" },
+        { "id":"ex-5","titulo":"CONTAR.SI.CONJUNTO","categoria":"Matemáticas Estadísticas","descripcion":"Cuenta registros con múltiples filtros activos. Ejemplo real: contar clientes VIP activos de Colombia con compras mayores a $500.","codigo":"=CONTAR.SI.CONJUNTO(A2:A6,\"CO\",B2:B6,\"VIP\",C2:C6,\">500\")" },
+        { "id":"ex-6","titulo":"MAX.SI.CONJUNTO & MIN.SI","categoria":"Matemáticas Estadísticas","descripcion":"Máximo o mínimo dentro de un subconjunto filtrado. Clave para rankings de ventas por categoría sin alterar el dataset.","codigo":"=MAX.SI.CONJUNTO(C2:C6, A2:A6,\"Norte\")\n=MIN.SI.CONJUNTO(C2:C6, B2:B6,\"Laptop\")" },
+        { "id":"ex-7","titulo":"REDONDEAR & ENTERO","categoria":"Matemáticas Estadísticas","descripcion":"REDONDEAR controla decimales para presentaciones. ENTERO trunca al entero inferior. Esencial en facturas, precios y KPIs.","codigo":"=REDONDEAR(A2*1.19, 2)   → IVA con 2 decimales\n=ENTERO(A2/1000)*1000    → Redondeo a miles" },
+        // LÓGICAS
+        { "id":"ex-8","titulo":"SI() anidado","categoria":"Lógicas y Condicionales","descripcion":"SI() anidado crea árboles de decisión con 3 o más ramas. Fundamental para clasificar clientes (VIP/Medio/Básico) o estados de pago.","codigo":"=SI(B2>1000,\"VIP\",SI(B2>500,\"Medio\",\"Básico\"))" },
+        { "id":"ex-9","titulo":"SI.CONJUNTO (IFS)","categoria":"Lógicas y Condicionales","descripcion":"Reemplazo moderno y legible de SI() anidado. Evalúa condiciones en orden, devuelve el primer resultado verdadero. Disponible Office 2019+.","codigo":"=SI.CONJUNTO(B2>1000,\"VIP\",B2>500,\"Medio\",B2>0,\"Básico\",VERDADERO,\"Sin ventas\")" },
+        { "id":"ex-10","titulo":"SIERROR & SINO.DISPONIBLE","categoria":"Lógicas y Condicionales","descripcion":"SIERROR captura cualquier error. SINO.DISPONIBLE captura solo #N/A dejando pasar otros errores para detectarlos. Protegen los modelos en producción.","codigo":"=SIERROR(BUSCARV(A2,Tabla,2,0),\"No encontrado\")\n=SINO.DISPONIBLE(BUSCARX(A2,E:E,F:F),0)" },
+        // TEXTO
+        { "id":"ex-11","titulo":"IZQUIERDA / DERECHA / EXTRAE","categoria":"Funciones de Texto","descripcion":"Extraen substrings por posición. Clave para parsear códigos como 'CO-2024-001', separar nombres/apellidos o extraer prefijos de IDs.","codigo":"=IZQUIERDA(A2,2)    → Prefijo 2 chars\n=DERECHA(A2,3)      → Sufijo 3 chars\n=EXTRAE(A2,4,4)     → 4 chars desde pos 4" },
+        { "id":"ex-12","titulo":"CONCATENAR / UNIRCADENAS","categoria":"Funciones de Texto","descripcion":"CONCATENAR une textos y celdas. UNIRCADENAS (TEXTJOIN) añade delimitador y puede ignorar vacíos, ideal para listas separadas por coma.","codigo":"=CONCATENAR(A2,\" \",B2)              → \"Ana García\"\n=UNIRCADENAS(\", \",VERDADERO,A2:A6)  → \"Ana, Luis, María\"" },
+        { "id":"ex-13","titulo":"TEXTO() — Formatear valores","categoria":"Funciones de Texto","descripcion":"Convierte números o fechas en texto con formato personalizado. Esencial en reportes donde el número debe aparecer como moneda, % o fecha legible.","codigo":"=TEXTO(A2,\"$#,##0.00\")    → \"$1,250.00\"\n=TEXTO(B2,\"dd/mm/aaaa\") → \"06/04/2026\"\n=TEXTO(C2,\"0.0%\")        → \"85.5%\"" },
+        { "id":"ex-14","titulo":"LARGO / HALLAR / SUSTITUIR","categoria":"Funciones de Texto","descripcion":"LARGO cuenta caracteres. HALLAR localiza posición de un substring. SUSTITUIR reemplaza ocurrencias. Cadena de limpieza para datos de sistemas ERP.","codigo":"=LARGO(A2)             → 15 caracteres\n=HALLAR(\"@\",A2)         → Posición del @\n=SUSTITUIR(A2,\"-\",\"\")   → Elimina guiones" },
+        // FECHAS
+        { "id":"ex-15","titulo":"FECHA / MES / AÑO / DIA","categoria":"Funciones de Fecha","descripcion":"Extraen componentes de fechas para agrupar por período en pivots. FECHA() construye fechas desde partes. Base de cualquier análisis temporal.","codigo":"=AÑO(A2)    → 2026\n=MES(A2)    → 4\n=DIA(A2)    → 6\n=FECHA(AÑO(A2),MES(A2),1)  → Primer día del mes" },
+        { "id":"ex-16","titulo":"HOY / DIAS.LAB / SIFECHA","categoria":"Funciones de Fecha","descripcion":"HOY() devuelve fecha dinámica. DIAS.LAB cuenta días hábiles entre fechas. SIFECHA calcula antigüedad en días, meses o años.","codigo":"=HOY()                  → Hoy dinámico\n=DIAS.LAB(A2,B2)        → Días hábiles\n=SIFECHA(A2,HOY(),\"m\") → Meses antigüedad" },
+        // BÚSQUEDA
+        { "id":"ex-17","titulo":"BUSCARV (VLOOKUP)","categoria":"Búsqueda y Referencia","descripcion":"Busca en la primera columna de una tabla y devuelve la columna indicada. FALSO=coincidencia exacta. El estándar histórico de los cruces de datos.","codigo":"=BUSCARV(A2,$E$2:$G$6,2,FALSO)" },
+        { "id":"ex-18","titulo":"INDICE & COINCIDIR","categoria":"Búsqueda y Referencia","descripcion":"Combina INDICE (extrae valor) con COINCIDIR (calcula posición). Permite buscar hacia la izquierda y es más rápida en tablas grandes que BUSCARV.","codigo":"=INDICE(C2:C6,COINCIDIR(A9,A2:A6,0))" },
+        { "id":"ex-19","titulo":"BUSCARX (XLOOKUP)","categoria":"Búsqueda y Referencia","descripcion":"El BUSCARV evolucionado de M365. Busca en cualquier dirección, maneja errores nativamente, puede devolver múltiples columnas de una sola vez.","codigo":"=BUSCARX(A9,A2:A6,C2:C6,\"No encontrado\",0)" },
+        // MATRICES DINÁMICAS
+        { "id":"ex-20","titulo":"FILTRAR()","categoria":"Matrices Dinámicas","descripcion":"Devuelve un subconjunto dinámico que cumple la condición. Resultado 'desborda' automáticamente (Spill). Reemplaza filtros manuales en miles de filas.","codigo":"=FILTRAR(A2:C6,C2:C6>500,\"Sin resultados\")" },
+        { "id":"ex-21","titulo":"UNIQUE() y ORDENAR()","categoria":"Matrices Dinámicas","descripcion":"UNICOS() elimina duplicados dinámicamente. ORDENAR() clasifica el resultado. Combinados reemplazan horas de trabajo manual de deduplicación.","codigo":"=ORDENAR(UNICOS(A2:A100))" },
+        { "id":"ex-22","titulo":"LET() — Variables en fórmulas","categoria":"Matrices Dinámicas","descripcion":"Declara variables internas en la fórmula evitando repetir cálculos. Mejora la legibilidad y el rendimiento de fórmulas complejas. Solo M365.","codigo":"=LET(tasa,1.19,base,SUMA(B2:B6),base*tasa)" },
+        // POWER QUERY
+        { "id":"ex-23","titulo":"Power Query: Lenguaje M","categoria":"Power Query (ETL)","descripcion":"Transformaciones repetibles y auditables. Table.SelectRows filtra en el origen (Query Folding). Table.Buffer carga en RAM para cruces rápidos.","codigo":"Table.SelectRows(Source, each [Region]=\"Norte\")\nTable.Buffer(TablaBase)" },
+        // PIVOT
+        { "id":"ex-24","titulo":"Tablas Dinámicas + Slicers","categoria":"Tablas Dinámicas","descripcion":"Resumen millones de filas en segundos. Los Slicers permiten filtrado interactivo visual. Usar 'Conexiones de informe' para controlar múltiples pivots.","codigo":"1. Insertar → Tabla Dinámica\n2. Insertar → Segmentación de datos\n3. Clic derecho → Conexiones de informe" }
     ],
     "sql": [
+
         { "id":"sq-1",  "titulo":"SELECT DISTINCT / LIMIT",  "categoria":"Sintaxis Básica",           "descripcion":"DISTINCT colapsa duplicados. LIMIT restringe el número de filas para no destruir la memoria del motor.",      "codigo":"SELECT DISTINCT user_id FROM logs LIMIT 100;" },
         { "id":"sq-2",  "titulo":"Filtrado WHERE, AND, IN",  "categoria":"Sintaxis Básica",           "descripcion":"Poda primaria PRE-agrupación. IN reemplaza múltiples OR.",                                                  "codigo":"SELECT * FROM ventas\nWHERE pais IN ('CO','MX') AND monto > 0;" },
         { "id":"sq-3",  "titulo":"INNER JOIN",               "categoria":"Uniones Relacionales",      "descripcion":"Retorna únicamente los registros con coincidencia en AMBAS tablas.",                                        "codigo":"SELECT u.nombre, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;" },
@@ -83,116 +100,133 @@ const functionDatabase = {
 // Cada ejercicio tiene sus propios datos de contexto y celda objetivo
 // ─────────────────────────────────────────────────────────────────────────────
 const GRID_CONTEXTS = {
-    // Atajos → datos genéricos, modo hardware sin grid editable
-    "ex-1": null,
-    "ex-2": null,
-    // Fórmulas matemáticas
+    "ex-1": null,  // hardware
+    "ex-2": null,  // hardware
+    // ex-3: SUMA & PROMEDIO — tabla de ventas por vendedor
     "ex-3": {
-        cols: ["A","B"],
-        headers: ["Número","Resultado"],
-        rows: [["144",""],["256",""],["81",""],["36",""],["Formula →",""]],
-        target: {row:5,col:2},
-        hint: "Escribe =RAIZ(144) en la celda marcada en amarillo"
+        cols:["A","B"], headers:["Vendedor","Ventas"],
+        rows:[["Ana","380"],["Luis","520"],["María","290"],["Pedro","610"],["Carlos","455"],["TOTAL →",""]],
+        target:{row:6,col:2}, hint:"=SUMA(B2:B6) o =PROMEDIO(B2:B6)"
     },
+    // ex-4: SUMAR.SI.CONJUNTO — ventas por región + producto
     "ex-4": {
-        cols: ["A","B"],
-        headers: ["Vendedor","Ventas"],
-        rows: [["Ana","380"],["Luis","520"],["María","290"],["Pedro","610"],["Carlos","455"],["TOTAL →",""]],
-        target: {row:6,col:2},
-        hint: "Escribe =SUMA(B2:B6) o =PROMEDIO(B2:B6)"
+        cols:["A","B","C","D"], headers:["Región","Producto","Ventas","Resultado"],
+        rows:[["Norte","Laptop","720",""],["Sur","Mouse","180",""],["Norte","Laptop","730",""],["Sur","Laptop","620",""],["Norte","Teclado","190",""],["SUMAR.SI.CONJ →","","",""]],
+        target:{row:6,col:4}, hint:"=SUMAR.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\",B2:B6,\"Laptop\")"
     },
+    // ex-5: CONTAR.SI.CONJUNTO — clientes VIP de CO con compras >500
     "ex-5": {
-        cols: ["A","B"],
-        headers: ["Cliente","Email"],
-        rows: [["Ana","ana@mail.com"],["Luis",""],["María","maria@c.co"],["Pedro",""],["Carlos","pc@g.com"],["Conteo →",""]],
-        target: {row:6,col:2},
-        hint: "Escribe =CONTARA(B2:B6) para contar emails no vacíos"
+        cols:["A","B","C","D"], headers:["País","Segmento","Compra","Resultado"],
+        rows:[["CO","VIP","780",""],["MX","VIP","320",""],["CO","Std","200",""],["CO","VIP","650",""],["MX","Std","900",""],["CONTAR.SI.CONJ →","","",""]],
+        target:{row:6,col:4}, hint:"=CONTAR.SI.CONJUNTO(A2:A6,\"CO\",B2:B6,\"VIP\",C2:C6,\">500\")"
     },
+    // ex-6: MAX.SI.CONJUNTO — máximo de ventas por región
     "ex-6": {
-        cols: ["A","B","C"],
-        headers: ["Región","Ventas","Criterio"],
-        rows: [["Norte","380","Norte"],["Sur","520",""],["Norte","290",""],["Sur","610",""],["Norte","455",""],["SUMAR.SI →","",""]],
-        target: {row:6,col:2},
-        hint: "Escribe =SUMAR.SI(A2:A6,\"Norte\",B2:B6)"
+        cols:["A","B","C"], headers:["Región","Vendedor","Ventas"],
+        rows:[["Norte","Ana","380"],["Sur","Luis","620"],["Norte","María","890"],["Sur","Pedro","310"],["Norte","Carlos","550"],["MAX Norte →","",""]],
+        target:{row:6,col:3}, hint:"=MAX.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\")"
     },
+    // ex-7: REDONDEAR — cálculo de IVA
     "ex-7": {
-        cols: ["A","B"],
-        headers: ["Monto","Segmento"],
-        rows: [["380",""],["620",""],["150",""],["890",""],["480",""],["Formula →",""]],
-        target: {row:6,col:2},
-        hint: "=SI(A2>500,\"Alto\",\"Bajo\") — escríbela para la primera fila"
+        cols:["A","B","C"], headers:["Producto","Precio Base","Precio+IVA"],
+        rows:[["Laptop","380",""],["Mouse","45",""],["Teclado","22",""],["Monitor","320",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=REDONDEAR(B2*1.19, 2)"
     },
+    // ex-8: SI() anidado — clasificación de clientes
     "ex-8": {
-        cols: ["A","B","C"],
-        headers: ["Monto","Estado","Resultado"],
-        rows: [["380","OK",""],["620","OK",""],["150","Pendiente",""],["890","OK",""],["480","Pendiente",""],["Formula →","",""]],
-        target: {row:6,col:3},
-        hint: "=SI(Y(A2>500,B2=\"OK\"),\"Aprobado\",\"Rechazado\")"
+        cols:["A","B","C"], headers:["Cliente","Compra","Segmento"],
+        rows:[["Ana","380",""],["Luis","1200",""],["María","650",""],["Pedro","90",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=SI(B2>1000,\"VIP\",SI(B2>500,\"Medio\",\"Básico\"))"
     },
+    // ex-9: SI.CONJUNTO — clasificación multi-rama
     "ex-9": {
-        cols: ["A","B"],
-        headers: ["Nombre Bruto","Nombre Limpio"],
-        rows: [["  Ana García ",""],["Luis  López",""],["  María  ",""],["Pedro Ruiz",""],["  Carlos B ",""],["Formula →",""]],
-        target: {row:6,col:2},
-        hint: "=ESPACIOS(A2) — elimina espacios extra"
+        cols:["A","B","C"], headers:["Cliente","Venta","Nivel"],
+        rows:[["Ana","380",""],["Luis","1500",""],["María","720",""],["Pedro","0",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=SI.CONJUNTO(B2>1000,\"VIP\",B2>500,\"Medio\",B2>0,\"Básico\",VERDADERO,\"Sin ventas\")"
     },
+    // ex-10: SIERROR — proteger un BUSCARV
     "ex-10": {
-        cols: ["A","B","C","D","E"],
-        headers: ["ID Buscar","","","ID","Nombre"],
-        rows: [["C003","→ Nombre:","","C001","Ana"],["","","","C002","Luis"],["","","","C003","María"],["","","","C004","Pedro"],["","","","C005","Carlos"]],
-        target: {row:1,col:2},
-        hint: "=BUSCARV(A2,$D$2:$E$6,2,FALSO) — busca el nombre del ID en A2"
+        cols:["A","B","C","D","E"], headers:["ID Buscar","Nombre","","ID","País"],
+        rows:[["X999","→ Resultado:","","C001","Colombia"],["","","","C002","México"],["","","","C003","Brasil"],["","","","",""],["","","","",""]],
+        target:{row:1,col:2}, hint:"=SIERROR(BUSCARV(A2,$D$2:$E$4,2,FALSO),\"No encontrado\")"
     },
+    // ex-11: IZQUIERDA / DERECHA / EXTRAE — parsear código
     "ex-11": {
-        cols: ["A","B","C","D"],
-        headers: ["Producto","Precio","","Buscar"],
-        rows: [["Laptop","1200","","Teclado"],["Mouse","25","→ Precio:",""],["Teclado","45","",""],["Monitor","320","",""],["Webcam","80","",""]],
-        target: {row:2,col:3},
-        hint: "=INDICE(B2:B6,COINCIDIR(D2,A2:A6,0))"
+        cols:["A","B","C"], headers:["Código SKU","Prefijo (2)","Resultado"],
+        rows:[["CO-2024-001","→ Extraer:",""],["MX-2024-002","",""],["BR-2025-001","",""],["AR-2024-003","",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=IZQUIERDA(A2,2) → extrae el prefijo del país"
     },
+    // ex-12: CONCATENAR — unir nombre + apellido
     "ex-12": {
-        cols: ["A","B","C","D"],
-        headers: ["Producto","Precio","","Buscar"],
-        rows: [["Laptop","1200","","Mouse"],["Mouse","25","→ Precio:",""],["Teclado","45","",""],["Monitor","320","",""],["Webcam","80","",""]],
-        target: {row:2,col:3},
-        hint: "=BUSCARX(D2,A2:A6,B2:B6,\"No encontrado\",0)"
+        cols:["A","B","C"], headers:["Nombre","Apellido","Nombre Completo"],
+        rows:[["Ana","García",""],["Luis","López",""],["María","Torres",""],["Pedro","Ruiz",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=CONCATENAR(A2,\" \",B2)"
     },
+    // ex-13: TEXTO() — formatear precios
     "ex-13": {
-        cols: ["A","B","C"],
-        headers: ["Cliente","Región","Ventas"],
-        rows: [["Ana","Norte","380"],["Luis","Sur","620"],["María","Norte","290"],["Pedro","Norte","890"],["Carlos","Sur","455"],["→ FILTRAR Norte","",""]],
-        target: {row:6,col:1},
-        hint: "=FILTRAR(A2:C6,B2:B6=\"Norte\") — filtra clientes del Norte"
+        cols:["A","B","C"], headers:["Precio Raw","Formato","Resultado"],
+        rows:[["1250","$#,##0.00",""],["0.855","0.0%",""],["44922","dd/mm/aaaa",""],["380","$ #,##0",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=TEXTO(A2,B2) — aplica el formato de la columna B"
     },
+    // ex-14: LARGO / HALLAR — analizar email
     "ex-14": {
-        cols: ["A","B"],
-        headers: ["Ciudades","Únicas Ordenadas"],
-        rows: [["Bogotá",""],["Medellín",""],["Bogotá",""],["Cali",""],["Medellín","→"],["Formula →",""]],
-        target: {row:6,col:2},
-        hint: "=ORDENAR(UNICOS(A2:A6))"
+        cols:["A","B"], headers:["Email","Long. / Pos @"],
+        rows:[["ana@empresa.com",""],["luis.lopez@corp.co",""],["maria@gmail.com",""],["pedro@hotmail.com",""],["Formula →",""]],
+        target:{row:5,col:2}, hint:"=LARGO(A2) o =HALLAR(\"@\",A2)"
     },
+    // ex-15: Fechas — extraer componentes
     "ex-15": {
-        cols: ["A"],
-        headers: ["Código M"],
-        rows: [["Table.SelectRows(Source, each [Region] = \"Norte\")"],["// Filtra en origen, no en Excel"],[""],[""],[" "]],
-        target: null,
-        hint: "Escribe la función M en la terminal (no en la celda)"
+        cols:["A","B","C","D"], headers:["Fecha Pedido","Año","Mes","Día"],
+        rows:[["06/04/2026","","",""],["15/01/2025","","",""],["28/11/2024","","",""],["03/07/2026","","",""],["Formula →","","",""]],
+        target:{row:5,col:2}, hint:"=AÑO(A2) en col B, =MES(A2) en col C"
     },
+    // ex-16: HOY / DIAS.LAB — calcular antigüedad
     "ex-16": {
-        cols: ["A"],
-        headers: ["Código M"],
-        rows: [["let"],["  Src = Table.Buffer(BaseDatos),"],["  Res = Table.Join(Src, ...)"],[" in Res"],[" "]],
-        target: null,
-        hint: "Escribe Table.Buffer() en la terminal"
+        cols:["A","B","C"], headers:["Contrato","Hoy/Fin","Días Hábiles"],
+        rows:[["01/01/2026","06/04/2026",""],["15/02/2026","06/04/2026",""],["01/03/2026","06/04/2026",""],["","",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=DIAS.LAB(A2,B2) — días hábiles entre fechas"
     },
+    // ex-17: BUSCARV — cruce de clientes
     "ex-17": {
-        cols: ["A","B","C"],
-        headers: ["Trimestre","Región","Ventas"],
-        rows: [["Q1","Norte","380"],["Q1","Sur","620"],["Q2","Norte","290"],["Q2","Sur","890"],["Q3","Norte","455"]],
-        target: null,
-        hint: "Insertar → Segmentación → conectar a tabla dinámica"
-    }
+        cols:["A","B","C","D","E"], headers:["ID Buscar","Nombre","","ID","Nombre"],
+        rows:[["C003","→ Nombre:","","C001","Ana"],["","","","C002","Luis"],["","","","C003","María"],["","","","C004","Pedro"],["","","","C005","Carlos"]],
+        target:{row:1,col:2}, hint:"=BUSCARV(A2,$D$2:$E$6,2,FALSO)"
+    },
+    // ex-18: INDICE & COINCIDIR
+    "ex-18": {
+        cols:["A","B","C","D"], headers:["Producto","Precio","","Buscar"],
+        rows:[["Laptop","1200","","Teclado"],["Mouse","25","→ Precio:",""],["Teclado","45","",""],["Monitor","320","",""],["Webcam","80","",""]],
+        target:{row:2,col:3}, hint:"=INDICE(B2:B6,COINCIDIR(D2,A2:A6,0))"
+    },
+    // ex-19: BUSCARX
+    "ex-19": {
+        cols:["A","B","C","D"], headers:["Producto","Precio","","Buscar"],
+        rows:[["Laptop","1200","","Mouse"],["Mouse","25","→ Precio:",""],["Teclado","45","",""],["Monitor","320","",""],["Webcam","80","",""]],
+        target:{row:2,col:3}, hint:"=BUSCARX(D2,A2:A6,B2:B6,\"No encontrado\",0)"
+    },
+    // ex-20: FILTRAR — ventas > 500
+    "ex-20": {
+        cols:["A","B","C"], headers:["Vendedor","Región","Ventas"],
+        rows:[["Ana","Norte","380"],["Luis","Sur","620"],["María","Norte","290"],["Pedro","Norte","890"],["Carlos","Sur","455"],["→ FILTRAR >500","",""]],
+        target:{row:6,col:1}, hint:"=FILTRAR(A2:C6,C2:C6>500,\"Sin resultados\")"
+    },
+    // ex-21: UNICOS + ORDENAR
+    "ex-21": {
+        cols:["A","B"], headers:["Ciudades","Ordenadas"],
+        rows:[["Bogotá",""],["Medellín",""],["Bogotá",""],["Cali",""],["Medellín","→"],["Formula →",""]],
+        target:{row:6,col:2}, hint:"=ORDENAR(UNICOS(A2:A6))"
+    },
+    // ex-22: LET()
+    "ex-22": {
+        cols:["A","B","C"], headers:["Vendedor","Ventas","Total+IVA"],
+        rows:[["Ana","380",""],["Luis","520",""],["María","290",""],["Pedro","610",""],["Formula →","",""]],
+        target:{row:5,col:3}, hint:"=LET(tasa,1.19,base,SUMA(B2:B5),base*tasa)"
+    },
+    // ex-23 y ex-24: Terminales (Power Query y Pivot)
+    "ex-23": null,
+    "ex-24": null
 };
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MAPA DE EJERCICIOS — Validadores y tipos
@@ -200,61 +234,76 @@ const GRID_CONTEXTS = {
 const EXERCISE_MAP = {
     "ex-1":  { type:"hardware", key:"ctrl+space",   instruccion:"Presiona Ctrl + Espacio para seleccionar la columna entera.", exito:"¡Ctrl + Espacio detectado! Columna seleccionada." },
     "ex-2":  { type:"hardware", key:"shift+space",  instruccion:"Presiona Shift + Espacio para seleccionar la fila entera.", exito:"¡Shift + Espacio detectado! Fila seleccionada." },
-    "ex-3":  { type:"formula",  regex:/^=RAIZ\(144\)$/i,                    instruccion:"Haz clic en la celda amarilla y escribe =RAIZ(144)", exito:"¡Resultado: 12! Raíz cuadrada de 144.", compute: () => 12 },
-    "ex-4":  { type:"formula",  regex:/^=SUMA\(B2:B6\)|^=PROMEDIO\(B2:B6\)/i, instruccion:"Escribe =SUMA(B2:B6) o =PROMEDIO(B2:B6) en la celda marcada.", exito:"¡Correcto!", compute: (formula) => formula.match(/PROMEDIO/i) ? "( 431 )" : "2255" },
-    "ex-5":  { type:"formula",  regex:/^=CONTARA\(B2:B6\)|^=CONTAR\(B2:B6\)/i, instruccion:"Escribe =CONTARA(B2:B6) para contar emails no vacíos.", exito:"¡3 emails encontrados!", compute: (f) => f.match(/CONTARA/i) ? "3" : "0" },
-    "ex-6":  { type:"formula",  regex:/^=SUMAR\.SI\(A2:A6,"Norte",B2:B6\)|^=SUMAR\.SI\(A2:A6,C2,B2:B6\)/i, instruccion:"Escribe =SUMAR.SI(A2:A6,\"Norte\",B2:B6)", exito:"¡Total Norte: 1125!", compute: () => "1.125" },
-    "ex-7":  { type:"formula",  regex:/^=SI\(.+,.+,.+\)$/i,                instruccion:"Escribe =SI(A2>500,\"Alto\",\"Bajo\") en la celda.", exito:"¡Función condicional correcta!", compute: () => "Bajo" },
-    "ex-8":  { type:"formula",  regex:/^=SI\(\s*Y\(.+\)/i,                 instruccion:"Escribe =SI(Y(A2>500,B2=\"OK\"),\"Aprobado\",\"Rechazado\")", exito:"¡Lógica booleana validada!", compute: () => "Rechazado" },
-    "ex-9":  { type:"formula",  regex:/^=ESPACIOS\(A\d+\)$/i,              instruccion:"Escribe =ESPACIOS(A2) para limpiar la celda.", exito:"¡Cadena limpiada!", compute: () => "Ana García" },
-    "ex-10": { type:"formula",  regex:/^=BUSCARV\(.+\)$/i,                 instruccion:"Escribe =BUSCARV(A2,$D$2:$E$6,2,FALSO)", exito:"¡BUSCARV correcto! Resultado: María", compute: () => "María" },
-    "ex-11": { type:"formula",  regex:/^=INDICE\(.+,COINCIDIR\(.+\)\)$/i,  instruccion:"Escribe =INDICE(B2:B6,COINCIDIR(D2,A2:A6,0))", exito:"¡INDICE+COINCIDIR correcto! Resultado: 45", compute: () => "45" },
-    "ex-12": { type:"formula",  regex:/^=BUSCARX\(.+\)$/i,                 instruccion:"Escribe =BUSCARX(D2,A2:A6,B2:B6,\"No encontrado\",0)", exito:"¡BUSCARX correcto! Resultado: 25", compute: () => "25" },
-    "ex-13": { type:"formula",  regex:/^=FILTRAR\(.+\)$/i,                 instruccion:"Escribe =FILTRAR(A2:C6,B2:B6=\"Norte\")", exito:"¡3 registros Norte filtrados!", compute: () => "Ana\nMaría\nPedro" },
-    "ex-14": { type:"formula",  regex:/^=ORDENAR\(UNICOS\(.+\)\)|^=UNICOS\(.+\)/i, instruccion:"Escribe =ORDENAR(UNICOS(A2:A6))", exito:"¡Únicos ordenados: Bogotá, Cali, Medellín!", compute: () => "Bogotá, Cali, Medellín" },
-    "ex-15": { type:"terminal", regex:/Table\.SelectRows/i,                 instruccion:"Escribe: Table.SelectRows(Source, each [Region] = \"Norte\")",  exito:"¡Query Folding correcto! Filtrado delegado." },
-    "ex-16": { type:"terminal", regex:/Table\.Buffer\(/i,                   instruccion:"Escribe: Source = Table.Buffer(BaseDatos)",                     exito:"¡Table.Buffer() correcto! Tabla en RAM." },
-    "ex-17": { type:"terminal", regex:/slicer|segmentacion|segmentación|insertar|pivot/i, instruccion:"Describe el flujo para insertar Slicers.",        exito:"¡Concepto Slicer validado!" },
-    "sq-1":  { type:"terminal", regex:/SELECT\s+DISTINCT/i,             instruccion:"Escribe SELECT DISTINCT user_id FROM logs LIMIT 100;", exito:"¡SELECT DISTINCT correcto!" },
-    "sq-2":  { type:"terminal", regex:/WHERE.+(IN\s*\(|AND|OR)/i,       instruccion:"Filtra con WHERE pais IN ('CO','MX').", exito:"¡WHERE + IN correcto!" },
-    "sq-3":  { type:"terminal", regex:/INNER\s+JOIN/i,                  instruccion:"Escribe un INNER JOIN entre users y orders.", exito:"¡INNER JOIN correcto!" },
-    "sq-4":  { type:"terminal", regex:/LEFT\s+JOIN/i,                   instruccion:"Escribe un LEFT JOIN de users a orders.", exito:"¡LEFT JOIN correcto!" },
-    "sq-5":  { type:"terminal", regex:/FULL\s+(OUTER\s+)?JOIN/i,        instruccion:"Escribe FULL OUTER JOIN entre tabla A y B.", exito:"¡FULL OUTER JOIN correcto!" },
-    "sq-6":  { type:"terminal", regex:/LEFT\s+JOIN[\s\S]+IS\s+NULL/i,   instruccion:"ANTI-JOIN: LEFT JOIN + WHERE columna IS NULL.", exito:"¡ANTI-JOIN correcto!" },
-    "sq-7":  { type:"terminal", regex:/SUM\(|AVG\(|COUNT\(/i,           instruccion:"SELECT region, SUM(monto) FROM ventas GROUP BY region;", exito:"¡Agregación correcta!" },
-    "sq-8":  { type:"terminal", regex:/HAVING/i,                        instruccion:"GROUP BY ... HAVING COUNT(*) > 5", exito:"¡HAVING correcto!" },
-    "sq-9":  { type:"terminal", regex:/ROW_NUMBER\(\)\s*OVER/i,         instruccion:"ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY date DESC)", exito:"¡ROW_NUMBER correcto!" },
-    "sq-10": { type:"terminal", regex:/DENSE_RANK\(\)|RANK\(\)/i,       instruccion:"DENSE_RANK() OVER(ORDER BY ventas DESC)", exito:"¡DENSE_RANK correcto!" },
-    "sq-11": { type:"terminal", regex:/LAG\(|LEAD\(/i,                  instruccion:"LAG(order_date) OVER(PARTITION BY user_id ORDER BY date)", exito:"¡LAG correcto!" },
-    "sq-12": { type:"terminal", regex:/NTILE\(\d+\)/i,                  instruccion:"NTILE(4) OVER(ORDER BY monto DESC)", exito:"¡NTILE correcto!" },
-    "sq-13": { type:"terminal", regex:/WITH\s+\w+\s+AS\s*\(/i,          instruccion:"WITH activos AS (SELECT * FROM users WHERE activo=1) SELECT * FROM activos;", exito:"¡CTE correcto!" },
-    "sq-14": { type:"terminal", regex:/EXPLAIN(\s+ANALYZE)?/i,          instruccion:"EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 42;", exito:"¡EXPLAIN correcto!" },
-    "py-1":  { type:"terminal", regex:/[\[{]/,                          instruccion:"Crea: clientes = [{'id':1,'nombre':'Ana'}]", exito:"¡Diccionario correcto!" },
-    "py-2":  { type:"terminal", regex:/set\(|tuple\(/i,                 instruccion:"ids = set([1,2,2,3])", exito:"¡Set correcto!" },
-    "py-3":  { type:"terminal", regex:/for\s+\w+\s+in|while\s+/,        instruccion:"Escribe un bucle for sobre una lista.", exito:"¡Bucle correcto!" },
-    "py-4":  { type:"terminal", regex:/lambda/,                         instruccion:"df['seg'] = df['gasto'].apply(lambda x: 'VIP' if x > 1000 else 'Std')", exito:"¡Lambda correcto!" },
-    "py-5":  { type:"terminal", regex:/@\w+/,                           instruccion:"@timer sobre una función de carga.", exito:"¡Decorador correcto!" },
-    "py-6":  { type:"terminal", regex:/df\.(head|describe)\(/,          instruccion:"df.describe().T", exito:"¡df.describe correcto!" },
-    "py-7":  { type:"terminal", regex:/df\.info\(\)/,                   instruccion:"df.info()", exito:"¡df.info correcto!" },
-    "py-8":  { type:"terminal", regex:/df\.dropna\(/,                   instruccion:"df.dropna(axis=0) o df.dropna(subset=['email'])", exito:"¡dropna correcto!" },
-    "py-9":  { type:"terminal", regex:/df\[.+\]\.fillna\(/,             instruccion:"df['edad'].fillna(df['edad'].median(), inplace=True)", exito:"¡fillna correcto!" },
-    "py-10": { type:"terminal", regex:/\.astype\(/,                     instruccion:"df['precio'].astype('float64')", exito:"¡astype correcto!" },
-    "py-11": { type:"terminal", regex:/drop_duplicates\(/,              instruccion:"df.drop_duplicates(subset=['email'], keep='last')", exito:"¡drop_duplicates correcto!" },
-    "py-12": { type:"terminal", regex:/groupby\(/,                      instruccion:"df.groupby('id').agg({'orden':'count','monto':'sum'})", exito:"¡groupby correcto!" },
-    "py-13": { type:"terminal", regex:/pd\.merge\(/,                    instruccion:"pd.merge(clientes, ordenes, on='id', how='left')", exito:"¡pd.merge correcto!" },
-    "py-14": { type:"terminal", regex:/heatmap\(|kdeplot\(/,            instruccion:"sns.heatmap(df.corr(), annot=True)", exito:"¡Seaborn correcto!" },
-    "gh-1":  { type:"terminal", regex:/git\s+config\s+--global/,        instruccion:"git config --global user.name \"TuNombre\"", exito:"¡git config correcto!" },
-    "gh-2":  { type:"terminal", regex:/git\s+(init|clone)/,             instruccion:"git clone https://github.com/usuario/repo.git", exito:"¡git clone correcto!" },
-    "gh-3":  { type:"terminal", regex:/git\s+status/,                   instruccion:"git status", exito:"¡git status correcto!" },
-    "gh-4":  { type:"terminal", regex:/git\s+add/,                      instruccion:"git add .", exito:"¡git add correcto!" },
-    "gh-5":  { type:"terminal", regex:/git\s+commit\s+-m/,              instruccion:"git commit -m \"feat: descripción\"", exito:"¡git commit correcto!" },
-    "gh-6":  { type:"terminal", regex:/git\s+(push|pull)/,              instruccion:"git push origin main", exito:"¡git push correcto!" },
-    "gh-7":  { type:"terminal", regex:/git\s+(branch|checkout)/,        instruccion:"git checkout -b feature/mi-rama", exito:"¡git branch correcto!" },
+    // Matemáticas
+    "ex-3":  { type:"formula", regex:/^=SUMA\(B2:B6\)|^=PROMEDIO\(B2:B6\)/i,  instruccion:"Escribe =SUMA(B2:B6) o =PROMEDIO(B2:B6) en la celda marcada.", exito:"¡Correcto!", compute:(f) => f.match(/PROMEDIO/i) ? "431" : "2.255" },
+    "ex-4":  { type:"formula", regex:/^=SUMAR\.SI\.CONJUNTO\(.+\)$/i,          instruccion:"Escribe =SUMAR.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\",B2:B6,\"Laptop\")", exito:"¡SUMAR.SI.CONJUNTO correcto! Total: 1.450", compute:() => "1.450" },
+    "ex-5":  { type:"formula", regex:/^=CONTAR\.SI\.CONJUNTO\(.+\)$/i,         instruccion:"Escribe =CONTAR.SI.CONJUNTO(A2:A6,\"CO\",B2:B6,\"VIP\",C2:C6,\">500\")", exito:"¡CONTAR.SI.CONJUNTO correcto! 2 registros.", compute:() => "2" },
+    "ex-6":  { type:"formula", regex:/^=MAX\.SI\.CONJUNTO\(.+\)|^=MIN\.SI\.CONJUNTO\(.+\)/i, instruccion:"Escribe =MAX.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\")", exito:"¡MAX condicional correcto! Máximo Norte: 890", compute:() => "890" },
+    "ex-7":  { type:"formula", regex:/^=REDONDEAR\(.+,.+\)|^=ENTERO\(.+\)/i,   instruccion:"Escribe =REDONDEAR(A2*1.19, 2) para calcular IVA redondeado.", exito:"¡REDONDEAR correcto!", compute:(f) => { try { return String(Math.round(380*1.19*100)/100); } catch(e){ return "452.20"; } } },
+    // Lógicas
+    "ex-8":  { type:"formula", regex:/^=SI\(.+,SI\(.+\)\)/i,                   instruccion:"Escribe =SI(B2>1000,\"VIP\",SI(B2>500,\"Medio\",\"Básico\"))", exito:"¡SI anidado correcto!", compute:() => "Básico" },
+    "ex-9":  { type:"formula", regex:/^=SI\.CONJUNTO\(.+\)$/i,                  instruccion:"Escribe =SI.CONJUNTO(B2>1000,\"VIP\",B2>500,\"Medio\",B2>0,\"Básico\",VERDADERO,\"Sin ventas\")", exito:"¡SI.CONJUNTO correcto!", compute:() => "Básico" },
+    "ex-10": { type:"formula", regex:/^=SIERROR\(.+\)|^=SINO\.DISPONIBLE\(.+\)/i, instruccion:"Escribe =SIERROR(BUSCARV(A2,Tabla,2,0),\"No encontrado\")", exito:"¡SIERROR correcto! Errores capturados.", compute:() => "No encontrado" },
+    // Texto
+    "ex-11": { type:"formula", regex:/^=IZQUIERDA\(.+\)|^=DERECHA\(.+\)|^=EXTRAE\(.+\)/i, instruccion:"Escribe =IZQUIERDA(A2,2) para extraer el prefijo del código.", exito:"¡Texto extraído!", compute:() => "CO" },
+    "ex-12": { type:"formula", regex:/^=CONCATENAR\(.+\)|^=UNIRCADENAS\(.+\)/i, instruccion:"Escribe =CONCATENAR(A2,\" \",B2) para unir nombre y apellido.", exito:"¡Cadenas unidas!", compute:() => "Ana García" },
+    "ex-13": { type:"formula", regex:/^=TEXTO\(.+,.+\)$/i,                      instruccion:"Escribe =TEXTO(A2,\"$#,##0.00\") para formatear el precio.", exito:"¡TEXTO correcto!", compute:() => "$1,250.00" },
+    "ex-14": { type:"formula", regex:/^=LARGO\(.+\)|^=HALLAR\(.+\)|^=SUSTITUIR\(.+\)/i, instruccion:"Escribe =LARGO(A2) para contar los caracteres del email.", exito:"¡LARGO correcto!", compute:() => "15" },
+    // Fechas
+    "ex-15": { type:"formula", regex:/^=AÑO\(.+\)|^=MES\(.+\)|^=DIA\(.+\)|^=FECHA\(.+\)/i, instruccion:"Escribe =AÑO(A2) para extraer el año de la fecha de pedido.", exito:"¡Función de fecha correcta!", compute:() => "2026" },
+    "ex-16": { type:"formula", regex:/^=HOY\(\)|^=DIAS\.LAB\(.+\)|^=SIFECHA\(.+\)/i,       instruccion:"Escribe =DIAS.LAB(A2,B2) para calcular días hábiles entre fechas.", exito:"¡Días hábiles calculados!", compute:() => "18 días hábiles" },
+    // Búsqueda
+    "ex-17": { type:"formula", regex:/^=BUSCARV\(.+\)$/i,                       instruccion:"Escribe =BUSCARV(A2,$D$2:$E$6,2,FALSO) para buscar el nombre del cliente.", exito:"¡BUSCARV correcto! Resultado: María", compute:() => "María" },
+    "ex-18": { type:"formula", regex:/^=INDICE\(.+,COINCIDIR\(.+\)\)$/i,        instruccion:"Escribe =INDICE(B2:B6,COINCIDIR(D2,A2:A6,0))", exito:"¡INDICE+COINCIDIR correcto! Resultado: 45", compute:() => "45" },
+    "ex-19": { type:"formula", regex:/^=BUSCARX\(.+\)$/i,                       instruccion:"Escribe =BUSCARX(D2,A2:A6,B2:B6,\"No encontrado\",0)", exito:"¡BUSCARX correcto! Resultado: 25", compute:() => "25" },
+    // Matrices
+    "ex-20": { type:"formula", regex:/^=FILTRAR\(.+\)$/i, instruccion:"Escribe =FILTRAR(A2:C6,C2:C6>500,\"Sin resultados\")", exito:"¡FILTRAR dinámico correcto!", compute:() => "Luis (620)\nPedro (890)" },
+    "ex-21": { type:"formula", regex:/^=ORDENAR\(UNICOS\(.+\)\)|^=UNICOS\(.+\)/i, instruccion:"Escribe =ORDENAR(UNICOS(A2:A6)) para ciudades únicas.", exito:"¡UNICOS+ORDENAR correcto!", compute:() => "Bogotá, Cali, Medellín" },
+    "ex-22": { type:"formula", regex:/^=LET\(.+\)$/i, instruccion:"Escribe =LET(tasa,1.19,base,SUMA(B2:B5),base*tasa)", exito:"¡Variable LET calculada!", compute:() => "2,082.50" },
+    // Power Query + Pivot (terminal)
+    "ex-23": { type:"terminal", regex:/Table\.(SelectRows|Buffer)\(/i, instruccion:"Escribe: Table.SelectRows(Source, each [Region]=\"Norte\")", exito:"¡Power Query M correcto!" },
+    "ex-24": { type:"terminal", regex:/slicer|segmentacion|segmentación|tabla dinámica|pivot/i, instruccion:"Describe: 1. Insertar Tabla Dinámica  2. Insertar Segmentador  3. Conexiones de informe", exito:"¡Flujo Pivot+Slicer correcto!" },
+
+    "sq-1":  { type:"terminal", regex:/SELECT\s+DISTINCT/i, instruccion:"Escribe SELECT DISTINCT user_id FROM logs LIMIT 100;", exito:"¡SELECT DISTINCT correcto!" },
+    "sq-2":  { type:"terminal", regex:/WHERE.+(IN\s*\(|AND|OR)/i, instruccion:"Filtra con WHERE pais IN ('CO','MX').", exito:"¡WHERE + IN correcto!" },
+    "sq-3":  { type:"terminal", regex:/INNER\s+JOIN/i, instruccion:"Escribe un INNER JOIN entre users y orders.", exito:"¡INNER JOIN correcto!" },
+    "sq-4":  { type:"terminal", regex:/LEFT\s+JOIN/i, instruccion:"Escribe un LEFT JOIN de users a orders.", exito:"¡LEFT JOIN correcto!" },
+    "sq-5":  { type:"terminal", regex:/FULL\s+(OUTER\s+)?JOIN/i, instruccion:"Escribe FULL OUTER JOIN entre tabla A y B.", exito:"¡FULL OUTER JOIN correcto!" },
+    "sq-6":  { type:"terminal", regex:/LEFT\s+JOIN[\s\S]+IS\s+NULL/i, instruccion:"ANTI-JOIN: LEFT JOIN + WHERE columna IS NULL.", exito:"¡ANTI-JOIN correcto!" },
+    "sq-7":  { type:"terminal", regex:/SUM\(|AVG\(|COUNT\(/i, instruccion:"SELECT region, SUM(monto) FROM ventas GROUP BY region;", exito:"¡Agregación correcta!" },
+    "sq-8":  { type:"terminal", regex:/HAVING/i, instruccion:"GROUP BY ... HAVING COUNT(*) > 5", exito:"¡HAVING correcto!" },
+    "sq-9":  { type:"terminal", regex:/ROW_NUMBER\(\)\s*OVER/i, instruccion:"ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY date DESC)", exito:"¡ROW_NUMBER correcto!" },
+    "sq-10": { type:"terminal", regex:/DENSE_RANK\(\)|RANK\(\)/i, instruccion:"DENSE_RANK() OVER(ORDER BY ventas DESC)", exito:"¡DENSE_RANK correcto!" },
+    "sq-11": { type:"terminal", regex:/LAG\(|LEAD\(/i, instruccion:"LAG(order_date) OVER(PARTITION BY user_id ORDER BY date)", exito:"¡LAG correcto!" },
+    "sq-12": { type:"terminal", regex:/NTILE\(\d+\)/i, instruccion:"NTILE(4) OVER(ORDER BY monto DESC)", exito:"¡NTILE correcto!" },
+    "sq-13": { type:"terminal", regex:/WITH\s+\w+\s+AS\s*\(/i, instruccion:"WITH activos AS (SELECT * FROM users WHERE activo=1) SELECT * FROM activos;", exito:"¡CTE correcto!" },
+    "sq-14": { type:"terminal", regex:/EXPLAIN(\s+ANALYZE)?/i, instruccion:"EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 42;", exito:"¡EXPLAIN correcto!" },
+    "py-1":  { type:"terminal", regex:/[\[{]/, instruccion:"Crea: clientes = [{'id':1,'nombre':'Ana'}]", exito:"¡Diccionario correcto!" },
+    "py-2":  { type:"terminal", regex:/set\(|tuple\(/i, instruccion:"ids = set([1,2,2,3])", exito:"¡Set correcto!" },
+    "py-3":  { type:"terminal", regex:/for\s+\w+\s+in|while\s+/, instruccion:"Escribe un bucle for sobre una lista.", exito:"¡Bucle correcto!" },
+    "py-4":  { type:"terminal", regex:/lambda/, instruccion:"df['seg'] = df['gasto'].apply(lambda x: 'VIP' if x > 1000 else 'Std')", exito:"¡Lambda correcto!" },
+    "py-5":  { type:"terminal", regex:/@\w+/, instruccion:"@timer sobre una función de carga.", exito:"¡Decorador correcto!" },
+    "py-6":  { type:"terminal", regex:/df\.(head|describe)\(/, instruccion:"df.describe().T", exito:"¡df.describe correcto!" },
+    "py-7":  { type:"terminal", regex:/df\.info\(\)/, instruccion:"df.info()", exito:"¡df.info correcto!" },
+    "py-8":  { type:"terminal", regex:/df\.dropna\(/, instruccion:"df.dropna(axis=0) o df.dropna(subset=['email'])", exito:"¡dropna correcto!" },
+    "py-9":  { type:"terminal", regex:/df\[.+\]\.fillna\(/, instruccion:"df['edad'].fillna(df['edad'].median(), inplace=True)", exito:"¡fillna correcto!" },
+    "py-10": { type:"terminal", regex:/\.astype\(/, instruccion:"df['precio'].astype('float64')", exito:"¡astype correcto!" },
+    "py-11": { type:"terminal", regex:/drop_duplicates\(/, instruccion:"df.drop_duplicates(subset=['email'], keep='last')", exito:"¡drop_duplicates correcto!" },
+    "py-12": { type:"terminal", regex:/groupby\(/, instruccion:"df.groupby('id').agg({'orden':'count','monto':'sum'})", exito:"¡groupby correcto!" },
+    "py-13": { type:"terminal", regex:/pd\.merge\(/, instruccion:"pd.merge(clientes, ordenes, on='id', how='left')", exito:"¡pd.merge correcto!" },
+    "py-14": { type:"terminal", regex:/heatmap\(|kdeplot\(/, instruccion:"sns.heatmap(df.corr(), annot=True)", exito:"¡Seaborn correcto!" },
+    "gh-1":  { type:"terminal", regex:/git\s+config\s+--global/, instruccion:"git config --global user.name \"TuNombre\"", exito:"¡git config correcto!" },
+    "gh-2":  { type:"terminal", regex:/git\s+(init|clone)/, instruccion:"git clone https://github.com/usuario/repo.git", exito:"¡git clone correcto!" },
+    "gh-3":  { type:"terminal", regex:/git\s+status/, instruccion:"git status", exito:"¡git status correcto!" },
+    "gh-4":  { type:"terminal", regex:/git\s+add/, instruccion:"git add .", exito:"¡git add correcto!" },
+    "gh-5":  { type:"terminal", regex:/git\s+commit\s+-m/, instruccion:"git commit -m \"feat: descripción\"", exito:"¡git commit correcto!" },
+    "gh-6":  { type:"terminal", regex:/git\s+(push|pull)/, instruccion:"git push origin main", exito:"¡git push correcto!" },
+    "gh-7":  { type:"terminal", regex:/git\s+(branch|checkout)/, instruccion:"git checkout -b feature/mi-rama", exito:"¡git branch correcto!" },
     "gh-8":  { type:"terminal", regex:/git\s+push.+origin|pull.request/i, instruccion:"git push origin feature/mi-rama", exito:"¡PR flow correcto!" },
-    "gh-9":  { type:"terminal", regex:/fork|clone.+github/i,            instruccion:"Describe el flujo de Fork + clone.", exito:"¡Fork correcto!" },
-    "in-1":  { type:"formula",  regex:/^=PY\(/i,                        instruccion:"Escribe =PY( para iniciar celda Python en Excel.", exito:"¡=PY() correcto!", compute: () => "DataFrame(5×8)" },
-    "in-2":  { type:"terminal", regex:/create_engine\(/,                instruccion:"create_engine('postgresql://user:pass@host/db')", exito:"¡SQLAlchemy correcto!" },
-    "in-3":  { type:"terminal", regex:/\.to_sql\(/,                     instruccion:"df.to_sql('tabla', engine, if_exists='replace')", exito:"¡to_sql correcto!" }
+    "gh-9":  { type:"terminal", regex:/fork|clone.+github/i, instruccion:"Describe el flujo de Fork + clone.", exito:"¡Fork correcto!" },
+    "in-1":  { type:"formula", regex:/^=PY\(/i, instruccion:"Escribe =PY( para iniciar celda Python en Excel.", exito:"¡=PY() correcto!", compute: () => "DataFrame(5×8)" },
+    "in-2":  { type:"terminal", regex:/create_engine\(/, instruccion:"create_engine('postgresql://user:pass@host/db')", exito:"¡SQLAlchemy correcto!" },
+    "in-3":  { type:"terminal", regex:/\.to_sql\(/, instruccion:"df.to_sql('tabla', engine, if_exists='replace')", exito:"¡to_sql correcto!" }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -278,12 +327,23 @@ function renderAllGrids() {
 function renderGrid(gridId, dataArray, theme) {
     const grid = document.getElementById(gridId);
     if (!grid) return;
-    grid.innerHTML = dataArray.map(item => `
-        <div class="function-card ${theme}-hover" onclick="openFunctionModal('${item.id}','${theme}')">
+    
+    // Obtener progreso de la biblioteca
+    const libProgress = typeof getProgress === 'function' ? getProgress('lib') : [];
+    
+    grid.innerHTML = dataArray.map(item => {
+        const isDone = libProgress.includes(item.id);
+        const doneBadge = isDone ? '<div class="done-badge">✓</div>' : '';
+        
+        return `
+        <div class="function-card ${theme}-hover ${isDone ? 'card-done' : ''}" 
+             onclick="openFunctionModal('${item.id}','${theme}')">
+            ${doneBadge}
             <span class="card-category ${theme}-color">${item.categoria}</span>
             <h3 class="card-title">${item.titulo}</h3>
             <p class="card-excerpt">${item.descripcion}</p>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -474,6 +534,9 @@ function verifyExcelLab() {
         fb.style.color = '#217346';
         // Update formula bar to show computed (like Excel pressing Enter)
         document.getElementById('excel-formula-bar').value = val;
+        
+        saveProgress(currentItemId, 'lib'); // Guardar progreso en la biblioteca
+        if (typeof triggerSuccess === 'function') triggerSuccess();
     } else {
         if (cell) {
             cell.innerText = '#¡VALOR!';
@@ -498,6 +561,8 @@ function verifyMicroLab() {
     if (ok) {
         fb.innerHTML   = `> ✅ [SUCCESS] ${currentExercise.exito}`;
         fb.style.color = '#10b981';
+        saveProgress(currentItemId, 'lib'); // Guardar progreso en la biblioteca
+        if (typeof triggerSuccess === 'function') triggerSuccess();
     } else {
         fb.innerHTML   = `> ❌ Sintaxis incorrecta. Pista: ${currentExercise.instruccion}`;
         fb.style.color = '#ef4444';

@@ -81,21 +81,19 @@ let functionDatabase = {
     ]
 };
 
+// Variable global para rastrear la misión actual
+let currentExerciseData = null;
+
 function fetchDatabase() {
     // Al ser un engine en bruto sin backend server, renderizamos la variable inmediatamente
     renderAllGrids();
 }
 
 function renderAllGrids() {
-    // Render Excel
     if(functionDatabase.excel) renderGrid('grid-excel', functionDatabase.excel, 'excel');
-    // Render SQL
     if(functionDatabase.sql) renderGrid('grid-sql', functionDatabase.sql, 'sql');
-    // Render Python
     if(functionDatabase.python) renderGrid('grid-python', functionDatabase.python, 'python');
-    // Render Github
     if(functionDatabase.github) renderGrid('grid-github', functionDatabase.github, 'github');
-    // Render Integracion
     if(functionDatabase.integration) renderGrid('grid-integration', functionDatabase.integration, 'integration');
 }
 
@@ -119,37 +117,107 @@ function renderGrid(gridId, dataArray, moduleTheme) {
 }
 
 /**
+ * Generador Dinámico de Ejercicios en Tiempo de Ejecución (Gamification Engine)
+ */
+function getOrGenerateExercise(dataObj) {
+    if (dataObj.ejercicio) return dataObj.ejercicio;
+
+    // Generación heurística basada en el código provisto
+    let primerComando = (dataObj.codigo || "").split('\\n')[0];
+    let validador = ".*";
+    
+    // Simplificar validador según categoría (esto se mejorará iterativamente en db)
+    if (dataObj.id.startsWith("gh")) validador = "git\\\\s+[a-z]+.*";
+    if (dataObj.id.startsWith("sq")) validador = "(?i)" + primerComando.split(" ")[0] + ".*";
+    if (dataObj.id.startsWith("ex-10")) validador = "(?i)BUSCARV.*"; // VLOOKUP Especial
+    
+    return {
+        instruccion: `Ingeniero, debes implementar una arquitectura válida para: ${dataObj.titulo}. Demuéstralo redactando el flujo lógico en la terminal.`,
+        validador_regex: validador,
+        mensaje_exito: `¡Lógica Validada! ${dataObj.titulo} está operando correctamente.`
+    };
+}
+
+/**
  * Funciones de interacción del Modal (Pop-Up)
  */
 function openFunctionModal(itemId, themeName) {
-    // Buscar el item en la base de datos
     let data = null;
     for (const moduleObj in functionDatabase) {
         const found = functionDatabase[moduleObj].find(i => i.id === itemId);
-        if (found) {
-            data = found;
-            break;
-        }
+        if (found) { data = found; break; }
     }
-    
     if(!data) return;
     
+    // UI Teoría
     document.getElementById('modal-title').innerText = data.titulo;
     document.getElementById('modal-category').innerText = data.categoria;
     document.getElementById('modal-desc').innerText = data.descripcion;
     document.getElementById('modal-code').innerText = data.codigo;
     
-    // Aplicar el color de rama al modal
+    // UI Práctica
+    currentExerciseData = getOrGenerateExercise(data);
+    document.getElementById('modal-exercise-desc').innerText = currentExerciseData.instruccion;
+    document.getElementById('modal-code-input').value = "";
+    document.getElementById('modal-code-input').placeholder = "Ingresa tu sentencia (Ej. " + (data.codigo.split('\\n')[0].substring(0, 20)) + "... )";
+    document.getElementById('modal-feedback').innerHTML = "> Esperando input...";
+    document.getElementById('modal-feedback').style.color = "#a5b4fc";
+    
+    // Resetear a pestaña teoría por defecto
+    switchModalTab('teoria');
+    
     const categorySpan = document.getElementById('modal-category');
-    categorySpan.className = ''; // reset
+    categorySpan.className = ''; 
     categorySpan.classList.add(`${themeName}-color`);
     
     const popup = document.getElementById('dynamic-modal');
     popup.classList.add('active');
 }
 
+function switchModalTab(tabId) {
+    document.querySelectorAll('.modal-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    
+    document.getElementById('modal-body-teoria').classList.add('hidden');
+    document.getElementById('modal-body-practica').classList.add('hidden');
+    
+    document.getElementById('modal-body-' + tabId).classList.remove('hidden');
+}
+
+function verifyMicroLab() {
+    if (!currentExerciseData) return;
+    
+    const inputVal = document.getElementById('modal-code-input').value.trim();
+    const feedback = document.getElementById('modal-feedback');
+    
+    if (inputVal === "") {
+        feedback.innerHTML = "> Error: El terminal está vacío.";
+        feedback.style.color = "#ef4444";
+        return;
+    }
+    
+    let regexObj;
+    try {
+        regexObj = new RegExp(currentExerciseData.validador_regex);
+    } catch(e) {
+        regexObj = /.*/; // fallback safe
+    }
+    
+    if (regexObj.test(inputVal)) {
+        feedback.innerHTML = "> ✅ [SUCCESS] " + currentExerciseData.mensaje_exito;
+        feedback.style.color = "#10b981";
+        
+        // Simular un Guardado de Progreso Global
+        setTimeout(() => {
+            if (typeof updateProgressUI === 'function') updateProgressUI(); // Integración con progress bar main.js
+        }, 800);
+    } else {
+        feedback.innerHTML = "> ❌ [FAILED] Error de sintaxis o lógica incorrecta para este nivel.";
+        feedback.style.color = "#ef4444";
+    }
+}
+
 function closeModal(e) {
-    // Si se pasa evento, checar si el clic fue estrictamente en el background
     if (e && e.target !== document.getElementById('dynamic-modal') && e.target !== document.querySelector('.btn-close')) {
         return;
     }

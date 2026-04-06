@@ -642,3 +642,37 @@ body {
 .modal-body .code-snippet {
     margin-top: 1.5rem;
 }
+
+/* =========================================
+   MODAL TABS v4.0
+   ========================================= */
+.modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #1e293b;
+    background: #020617;
+}
+
+.modal-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.modal-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+}
+
+.modal-tab.active {
+    color: var(--color-accent);
+    border-bottom: 3px solid var(--color-accent);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.hidden { display: none !important; }

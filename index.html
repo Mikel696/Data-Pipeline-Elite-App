@@ -20,9 +20,10 @@
         </div>
     </div>
 
-    <!-- UI Modal Glassmorphism v3.0 -->
+    <!-- UI Modal Glassmorphism v4.0 (Micro-Labs) -->
     <div id="dynamic-modal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
+            
             <div class="modal-header">
                 <div class="modal-header-text">
                     <h3 id="modal-title">Título de Función</h3>
@@ -30,12 +31,38 @@
                 </div>
                 <button class="btn-close" onclick="closeModal()">&times;</button>
             </div>
-            <div class="modal-body">
+
+            <!-- Tab Switcher -->
+            <div class="modal-tabs">
+                <button id="tab-teoria" class="modal-tab active" onclick="switchModalTab('teoria')">📖 Teoría</button>
+                <button id="tab-practica" class="modal-tab" onclick="switchModalTab('practica')">💻 Práctica</button>
+            </div>
+
+            <div class="modal-body" id="modal-body-teoria">
                 <p id="modal-desc">Descripción detallada de la función.</p>
                 <div class="code-snippet">
                     <pre><code id="modal-code">codigo base</code></pre>
                 </div>
             </div>
+
+            <div class="modal-body hidden" id="modal-body-practica">
+                <div class="mission-brief glass-card" style="margin-bottom: 1rem; border: 1px solid var(--color-accent); background: rgba(99, 102, 241, 0.1);">
+                    <h4 style="color: var(--color-text); margin-bottom: 5px;">Misión de Entrenamiento:</h4>
+                    <p id="modal-exercise-desc" style="font-size: 0.9em; color: var(--color-muted);">Instruccion</p>
+                </div>
+                <div class="terminal-box" style="box-shadow: none;">
+                    <div class="terminal-header" style="background:#000">
+                        <div class="term-dot dot-r"></div><div class="term-dot dot-y"></div><div class="term-dot dot-g"></div>
+                        <span style="margin-left:5px; font-family:'Fira Code'; font-size:0.8em; color:#a5b4fc">sandbox.exe</span>
+                    </div>
+                    <div class="terminal-body" style="padding:10px; background:#050b14;">
+                        <textarea id="modal-code-input" class="code-editor" style="height: 60px;" placeholder="Escribe tu comando o script aquí..."></textarea>
+                        <button class="btn-run" style="margin-top:0; padding: 6px 12px; font-size:0.85em;" onclick="verifyMicroLab()">VALIDAR CÓDIGO</button>
+                        <div id="modal-feedback" class="terminal-feedback" style="min-height:20px; margin-top:10px;">> Esperando input...</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

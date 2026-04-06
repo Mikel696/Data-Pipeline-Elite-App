@@ -1,0 +1,6 @@
+customer_id,name,signup_date,country,last_purchase_date,total_spent,is_churned
+C001,John Doe,2024-01-15,USA,2025-06-10,1250.50,False
+C002,Maria Garcia,2023-11-20,Spain,2024-02-05,320.00,True
+C003,Wei Chen,2024-03-05,China,2025-08-01,890.75,False
+C004,Ana Silva,2023-05-10,Brazil,2023-12-15,150.20,True
+C005,James Smith,2025-01-10,UK,2025-08-15,450.00,False

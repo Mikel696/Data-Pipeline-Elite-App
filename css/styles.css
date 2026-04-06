@@ -1,0 +1,461 @@
+/* =========================================
+   Data Pipeline Elite App - STYLES
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap');
+
+:root {
+    /* Color Palette */
+    --bg-main: #020617; /* Dark Mode Deep */
+    --bg-glass: rgba(15, 23, 42, 0.6);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    
+    --color-sql: #38bdf8;
+    --color-excel: #10b981;
+    --color-python: #fbbf24;
+    --color-text: #f8fafc;
+    --color-muted: #94a3b8;
+    --color-accent: #6366f1; /* Para hover o botones especiales */
+    
+    /* Layout */
+    --sidebar-width: 280px;
+    --nav-height: 80px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--color-text);
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+/* =========================================
+   UTILIDADES GLASSMORPHISM
+   ========================================= */
+.glass-panel {
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+}
+
+.glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================
+   LAYOUT PRINCIPAL
+   ========================================= */
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    border-right: 1px solid var(--border-glass);
+    z-index: 10;
+}
+
+.logo {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.logo h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--color-sql), var(--color-python));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.logo span {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* NAVIGATION */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--color-muted);
+    font-weight: 600;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text);
+}
+
+.nav-btn.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-divider {
+    border: 0;
+    height: 1px;
+    background: var(--border-glass);
+    margin: 1rem 0;
+}
+
+.lab-btn {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+.lab-btn:hover, .lab-btn.active {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+}
+
+/* PROGRESS BAR */
+.user-progress {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+
+.user-progress p {
+    font-size: 0.8rem;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.progress-bar-container {
+    height: 6px;
+    background: #334155;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-sql), var(--color-excel));
+    transition: width 0.8s ease-out;
+}
+
+.progress-text {
+    font-size: 0.75em;
+    color: var(--color-muted);
+}
+
+.sidebar-footer {
+    text-align: center;
+    margin-top: auto;
+}
+
+.github-link {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.github-link:hover { color: var(--color-text); }
+
+
+/* =========================================
+   MAIN WORKSPACE
+   ========================================= */
+.main-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.top-nav {
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    padding: 0 3rem;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.project-info h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.highlight { color: #f8fafc; font-weight: 800; }
+.project-info p { font-size: 0.85rem; color: var(--color-muted); margin-top: 4px; }
+
+
+/* VIEWPORT & MODULES */
+.content-viewport {
+    flex: 1;
+    padding: 3rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.module-view { display: none; }
+.module-view.active-view { display: block; }
+
+/* Animaciones */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.module-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-glass);
+}
+
+.module-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+.module-header p { color: var(--color-muted); font-size: 1.1rem; max-width: 800px; }
+
+/* Colores Dinámicos Borde */
+.sql-border { border-bottom-color: var(--color-sql); }
+.python-border { border-bottom-color: var(--color-python); }
+.excel-border { border-bottom-color: var(--color-excel); }
+.lab-border { border-bottom-color: var(--color-accent); }
+
+/* Colores Texto/Iconos */
+.sql-color { color: var(--color-sql); }
+.python-color { color: var(--color-python); }
+.excel-color { color: var(--color-excel); }
+
+
+/* =========================================
+   OVERLAY ANIMATION SUCCESS
+   ========================================= */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(2, 6, 23, 0.9);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.overlay.hidden { display: none; }
+
+.overlay-content {
+    text-align: center;
+    animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.overlay-content h2 {
+    color: var(--color-excel);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.success-icon {
+    font-size: 5rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes scaleUp {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+}
+
+/* Scrollbars custom */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* =========================================
+   TERMINAL PRO & MASTER LAB UI
+   ========================================= */
+.lab-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.mission-brief {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.data-preview {
+    background: #0b1120;
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+.data-table th, .data-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #1e293b;
+}
+
+.data-table th {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.terminal-box {
+    background: #000;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-header {
+    background: #1e293b;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.term-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+}
+.dot-r { background: #ef4444; }
+.dot-y { background: #f59e0b; }
+.dot-g { background: #10b981; }
+
+.terminal-body {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-editor {
+    width: 100%;
+    height: 150px;
+    background: transparent;
+    border: none;
+    color: #10b981;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    resize: none;
+    outline: none;
+}
+
+.btn-run {
+    align-self: flex-end;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-run:hover {
+    background: #4f46e5;
+}
+
+.terminal-feedback {
+    margin-top: 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    min-height: 40px;
+}
+
+.terminal-feedback.error { color: #ef4444; }
+.terminal-feedback.success { color: #10b981; }
+
+/* Tipografia de Contenido Masivo */
+.theory-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    line-height: 1.8;
+}
+
+.theory-content h3 {
+    margin-top: 1rem;
+    color: var(--color-text);
+}
+
+.theory-content p {
+    color: #cbd5e1;
+    font-size: 1.05rem;
+}
+
+.code-snippet {
+    background: #0b1120;
+    padding: 1.2rem;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+    font-family: 'Fira Code', monospace;
+    color: #e2e8f0;
+    overflow-x: auto;
+}

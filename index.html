@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pipeline Elite App | Churn Analysis</title>
+    <!-- Configuración para PWA básica -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Estilos Nucleo -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Animación de carga interactiva o success overlay -->
+    <div id="success-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <h2 id="success-message">¡Reto Superado!</h2>
+            <div class="success-icon">🏆</div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <h2>Data Elite</h2>
+                <span>App</span>
+            </div>
+            
+            <div class="user-progress">
+                <p>Laboratorio Maestro</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="master-progress"></div>
+                </div>
+                <span class="progress-text" id="progress-percent">0% Completado</span>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#sql" class="nav-btn active" data-target="sql" onclick="appNavigate('sql', this)">
+                    <span class="icon sql-color">🗄️</span> Data Foundry (SQL)
+                </a>
+                <a href="#python" class="nav-btn" data-target="python" onclick="appNavigate('python', this)">
+                    <span class="icon python-color">🐍</span> Analytic Engine (Python)
+                </a>
+                <a href="#excel" class="nav-btn" data-target="excel" onclick="appNavigate('excel', this)">
+                    <span class="icon excel-color">📊</span> Exec Front-end (Excel)
+                </a>
+                <hr class="nav-divider">
+                <a href="#master-lab" class="nav-btn lab-btn" data-target="master-lab" onclick="appNavigate('master-lab', this)">
+                    <span class="icon">🚀</span> Laboratorio Maestro
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="https://github.com/" target="_blank" class="github-link">Ver en GitHub</a>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-workspace">
+            <header class="top-nav glass-panel">
+                <div class="project-info">
+                    <h1>Proyecto: <span class="highlight">Análisis de Retención E-commerce</span></h1>
+                    <p>Construyendo un Pipeline End-to-End</p>
+                </div>
+            </header>
+
+            <div class="content-viewport" id="content-viewport">
+                
+                <!-- Módulo 1: SQL Data Foundry -->
+                <section id="sql" class="module-view active-view fade-in">
+                    <div class="module-header sql-border">
+                        <h2>1. Data Foundry: Extracción y Normalización</h2>
+                        <p>Aprende a cruzar tablas y extraer métricas maestras utilizando las herramientas corporativas de SQL.</p>
+                    </div>
+                    <!-- Contenido inmersivo de SQL inyectado -->
+                    <div class="card glass-card theory-content">
+                        <h3>Data Wrangling Orientado a Churn</h3>
+                        <p>El "Data Wrangling" (o doma de datos) es el proceso fundamental de transformar datos crudos y dispersos en un formato estructurado y analizable. En el contexto del E-Commerce Churn, la meta es crear un "Dataset Plano" (flattened dataset) donde cada fila represente un cliente único, concatenado a la totalidad de su historial transaccional y métricas de inactividad.</p>
+                        
+                        <h3>La Defensa del LEFT JOIN</h3>
+                        <p>¿Por qué <code>LEFT JOIN</code> es sagrado en el análisis de retención? Imagina que realizas un <code>INNER JOIN</code> clásico entre la tabla <code>Customers</code> (todos los registrados) y la tabla <code>Orders</code> (las transacciones facturadas). El motor SQL interceptará las llaves y <strong>destruirá</strong> (omitirá) inmediatamente a todos los clientes que se registraron pero que nunca compraron nada. Al perder esos registros, pierdes la visibilidad entera del 'Early Churn' (usuarios que rebotan sin generar ganancias). Con <strong>LEFT JOIN</strong> garantizas que tu tabla madre dictamine la integridad del ecosistema de datos, manteniendo los perfiles intactos y rellenando con valores <code>NULL</code> aquellas áreas sin facturación, las cuales más tarde el Analytic Engine de Python utilizará como poderosas banderas para sus algoritmos predictivos.</p>
+                        
+                        <div class="code-snippet">
+                            <pre><code>-- Ejemplo de una extracción segura para un data pipeline.
+SELECT c.customer_id, 
+       c.signup_date,
+       o.order_date, 
+       o.total_amount
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Módulo 2: Python Analytic Engine -->
+                <section id="python" class="module-view hidden">
+                    <div class="module-header python-border">
+                        <h2>2. Analytic Engine: Python & Pandas</h2>
+                        <p>Limpia vectores nulos y construye un modelo de categorización RFM puro.</p>
+                    </div>
+                    <div class="card glass-card theory-content">
+                        <h3>Anatomía del Modelo Predictivo RFM</h3>
+                        <p>En la ingesta de Machine Learning, el modelo de Segmentación <strong>RFM (Recency, Frequency, Monetary)</strong> actúa como un radar forense sobre el comportamiento del usuario. Es una de las metodologías cuantitativas más implacables y certeras.</p>
+                        <p>De las tres variables, la <strong>Recencia (Recency)</strong> es el predictor absoluto supremo para detectar el Churn. La Recencia responde a una pregunta matemática sencilla: <em>¿Hace cuántos días ocurrió el último latido financiero (transacción) del cliente?</em>. La teoría indica que la probabilidad del usuario para generar una nueva compra cae exponencialmente según aumenten los días inactivos. Si un cliente tenía una alta Frecuencia (F) y un Monetary Value alto (M), pero su Recencia actual supera drásticamente su tiempo promedio de recompra, estamos ante un caso claro de fuga (Churn) VIP inminente.</p>
+                        
+                        <h3>El Rol de Pandas en el Engine Analítico</h3>
+                        <p>La inyección de los datos brutos provenientes de SQL necesita una curaduría refinada. Los vectores <code>NULL</code> dejados sistemáticamente por los <code>LEFT JOIN</code> no son vacíos accidentales: son valiosa información de no-ingreso. Mediante el poder de la librería `pandas`, imputamos o llenamos (`fillna()`) esos campos para normalizar el tensor de entrada de los algoritmos e impedir rupturas de compilación en el eventual clasificador entrenado con `Scikit-Learn`.</p>
+                        
+                        <div class="code-snippet">
+                            <pre><code>import pandas as pd
+import numpy as np
+
+# Ingesta
+df = pd.read_csv('datasets_ejemplo.csv')
+
+# Ingeniería del Modelo RFM - Cálculo de Recencia Matemática
+# (Usando una fecha de corte simulada)
+corte_tiempo = pd.to_datetime('2025-01-01')
+
+rfm_engine = df.groupby('customer_id').agg({
+    'last_purchase_date': lambda x: (corte_tiempo - pd.to_datetime(x.max())).days,
+    'order_id': 'count',
+    'total_spent': 'sum'
+}).rename(columns={
+    'last_purchase_date': 'Recency',
+    'order_id': 'Frequency',
+    'total_spent': 'Monetary'
+})
+
+print(rfm_engine.sort_values(by="Recency", ascending=False).head())</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Módulo 3: Excel Exec Front-end -->
+                <section id="excel" class="module-view hidden">
+                    <div class="module-header excel-border">
+                        <h2>3. Executive Front-end: Dashboards Reales</h2>
+                        <p>Presenta los insights procesados en una interfaz que los tomadores de decisiones entiendan.</p>
+                    </div>
+                    <div class="card glass-card theory-content">
+                        <h3>Storytelling con Datos (El Rol Ejecutivo)</h3>
+                        <p>El código más avanzado del mundo no tiene ningún impacto si el CEO de tu compañía no logra asimilar la urgencia de la información. Excel y Power BI encarnan el 'Executive Front-End', donde la rigurosidad matemática se transforma en **Storytelling Técnico**.</p>
+                        
+                        <h3>Focalización a través de la Paleta de Colores</h3>
+                        <p>Diseñar un Dashboard no es pintar de colores variopintos una gráfica; es dirigir el ojo del ejecutivo hacia la decisión. La semiótica (el uso del color) en el cálculo de Retention Rate sigue un principio biológico de urgencia:</p>
+                        <ul>
+                            <li><strong>Alerta Crítica (Rojos/Carmesí):</strong> Se destinan visualmente a los KPIs representativos de clientes desertores (Churn alto). Inmediatamente inyectan la sensación de peligro financiero o fuga de ingresos.</li>
+                            <li><strong>Validación Positiva (Verdes/Esmeralda):</strong> Reservados exclusivamente para las cohortes de clientes que se han retenido, destacando el LTV (Life Time Value) positivo y confirmando la lealtad con seguridad táctica.</li>
+                            <li><strong>Información Neutral (Grises/Azules oscuros):</strong> Constituyen el fondo y las tablas base de lectura de tendencias, nunca desvían la atención ni cansan la vista del Directivo (Dark Mode UX).</li>
+                        </ul>
+                        
+                        <h3>Automatización Escalable con Power Query</h3>
+                        <p>Para lograr que este dashboard viva y respire, se enruta mediante *M Language* dentro del Editor Avanzado. Con esto, liberas al área analítica de "abrir archivos", dejando que el proceso ingiera autónomamente los tensores que produjo Python la noche interior, actualizando el lienzo del C-Level en un solo clic.</p>
+                        
+                        <div class="code-snippet">
+                            <pre><code>let
+    // Pipeline Ejecutivo
+    Origen = Csv.Document(File.Contents("C:\Pipeline_Cloud\modelo_rfm_predictivo.csv"),
+    [Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars=true]),
+    Filtro_Retenidos = Table.SelectRows(Encabezados, each ([is_churned] <> "True")),
+    Transformar_Numericos = Table.TransformColumnTypes(Filtro_Retenidos,{{"Recency", Int64.Type}, {"Monetary", type number}})
+in
+    Transformar_Numericos</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Módulo 4: Master Lab -->
+                <section id="master-lab" class="module-view hidden">
+                    <div class="module-header lab-border">
+                        <h2>🏆 Laboratorio Maestro: Simulador Pipeline</h2>
+                        <p>Supera los 15 niveles integrando todo lo aprendido. Tu progreso se guardará localmente.</p>
+                    </div>
+                    <!-- Layout del Laboratorio interactivo Terminal PRO -->
+                    <div class="lab-container fade-in">
+                        
+                        <!-- Panel Izquierdo: Misión y Data -->
+                        <div class="mission-brief glass-card">
+                            <div class="mission-header" style="border-bottom: 2px solid var(--border-glass); padding-bottom: 15px;">
+                                <h3 id="mission-title" style="color: var(--color-text); font-size: 1.4rem;">Cargando Simulador...</h3>
+                                <p id="mission-desc" style="color: var(--color-muted); margin-top: 5px; font-size: 0.95rem;">Iniciando variables de entorno.</p>
+                            </div>
+                            
+                            <div class="data-preview" id="data-preview-container">
+                                <!-- Se inyectará desde main.js la tabla HTML dinâmica de showDataPreview() -->
+                            </div>
+                        </div>
+
+                        <!-- Panel Derecho: Terminal y Editor -->
+                        <div class="terminal-box">
+                            <div class="terminal-header">
+                                <div class="term-dot dot-r"></div>
+                                <div class="term-dot dot-y"></div>
+                                <div class="term-dot dot-g"></div>
+                                <span style="margin-left: 10px; font-family: 'Fira Code', monospace; font-size: 0.85em; color: #a5b4fc; font-weight: 600;">master_pipeline.exe</span>
+                            </div>
+                            <div class="terminal-body" style="background-color: #050b14;">
+                                <textarea id="code-editor" class="code-editor" placeholder="Escribe tu sentencia aquí o carga la librería..."></textarea>
+                                <button id="submit-btn" class="btn-run" onclick="checkAnswer()">EJECUTAR SCRIPT / VALIDAR</button>
+                                <div id="terminal-feedback" class="terminal-feedback">
+                                    > _ kernel operativo en localhost:4200. Iterando lab.
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/simulator.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

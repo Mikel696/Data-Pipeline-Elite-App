@@ -50,7 +50,7 @@
                     <h4 style="color: var(--color-text); margin-bottom: 5px;">Misión de Entrenamiento:</h4>
                     <p id="modal-exercise-desc" style="font-size: 0.9em; color: var(--color-muted);">Instruccion</p>
                 </div>
-                <div class="terminal-box" style="box-shadow: none;">
+                <div class="terminal-box" id="terminal-sandbox" style="box-shadow: none;">
                     <div class="terminal-header" style="background:#000">
                         <div class="term-dot dot-r"></div><div class="term-dot dot-y"></div><div class="term-dot dot-g"></div>
                         <span style="margin-left:5px; font-family:'Fira Code'; font-size:0.8em; color:#a5b4fc">sandbox.exe</span>
@@ -61,6 +61,34 @@
                         <div id="modal-feedback" class="terminal-feedback" style="min-height:20px; margin-top:10px;">> Esperando input...</div>
                     </div>
                 </div>
+
+                <!-- EXCEL SANDBOX SIMULATOR (V4.5) -->
+                <div class="excel-sandbox-box hidden" id="excel-sandbox">
+                    <div class="excel-header">
+                        <span class="fx-icon">fx</span>
+                        <input type="text" id="excel-formula-bar" class="excel-input" placeholder="Ingresa función (=VLOOKUP...)" onkeydown="if(event.key === 'Enter') verifyExcelLab()">
+                        <button class="btn-run excel-btn" onclick="verifyExcelLab()">✓</button>
+                    </div>
+                    <div class="excel-grid-container">
+                        <table class="excel-grid">
+                            <thead>
+                                <tr>
+                                    <th></th><th>A</th><th>B</th><th>C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="row-num">1</td><td class="cell" onclick="selectCell(this, 'A1')">Data A</td><td class="cell" onclick="selectCell(this, 'B1')">Data B</td><td class="cell" onclick="selectCell(this, 'C1')">100</td></tr>
+                                <tr><td class="row-num">2</td><td class="cell" onclick="selectCell(this, 'A2')">Data C</td><td class="cell" onclick="selectCell(this, 'B2')">Data D</td><td class="cell" onclick="selectCell(this, 'C2')">200</td></tr>
+                                <tr><td class="row-num">3</td><td class="cell" onclick="selectCell(this, 'A3')">Total</td><td class="cell" onclick="selectCell(this, 'B3')">...</td><td class="cell highlight-cell" onclick="selectCell(this, 'C3')"></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="key-listener-overlay hidden" id="key-listener-overlay">
+                            <span class="blink-cursor">Misión de Hardware activa. Presiona las teclas requeridas...</span>
+                        </div>
+                    </div>
+                    <div id="excel-feedback" class="excel-feedback">> Esperando evento/fórmula...</div>
+                </div>
+
             </div>
 
         </div>

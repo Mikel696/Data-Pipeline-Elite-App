@@ -20,12 +20,31 @@
         </div>
     </div>
 
+    <!-- UI Modal Glassmorphism v3.0 -->
+    <div id="dynamic-modal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3 id="modal-title">Título de Función</h3>
+                    <span id="modal-category">Categoría</span>
+                </div>
+                <button class="btn-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-desc">Descripción detallada de la función.</p>
+                <div class="code-snippet">
+                    <pre><code id="modal-code">codigo base</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar glass-panel">
             <div class="logo">
                 <h2>Data Elite</h2>
-                <span>App</span>
+                <span>App v3.0</span>
             </div>
             
             <div class="user-progress">
@@ -37,14 +56,20 @@
             </div>
 
             <nav class="nav-menu">
-                <a href="#sql" class="nav-btn active" data-target="sql" onclick="appNavigate('sql', this)">
+                <a href="#excel" class="nav-btn active" data-target="excel" onclick="appNavigate('excel', this)">
+                    <span class="icon excel-color">📊</span> Exec Front-end (Excel)
+                </a>
+                <a href="#sql" class="nav-btn" data-target="sql" onclick="appNavigate('sql', this)">
                     <span class="icon sql-color">🗄️</span> Data Foundry (SQL)
                 </a>
                 <a href="#python" class="nav-btn" data-target="python" onclick="appNavigate('python', this)">
                     <span class="icon python-color">🐍</span> Analytic Engine (Python)
                 </a>
-                <a href="#excel" class="nav-btn" data-target="excel" onclick="appNavigate('excel', this)">
-                    <span class="icon excel-color">📊</span> Exec Front-end (Excel)
+                <a href="#github" class="nav-btn" data-target="github" onclick="appNavigate('github', this)">
+                    <span class="icon github-color">🐙</span> GitHub Master
+                </a>
+                <a href="#integration" class="nav-btn" data-target="integration" onclick="appNavigate('integration', this)">
+                    <span class="icon" style="color:#d946ef">⚙️</span> Flujo Profesional
                 </a>
                 <hr class="nav-divider">
                 <a href="#master-lab" class="nav-btn lab-btn" data-target="master-lab" onclick="appNavigate('master-lab', this)">
@@ -68,112 +93,66 @@
 
             <div class="content-viewport" id="content-viewport">
                 
-                <!-- Módulo 1: SQL Data Foundry -->
-                <section id="sql" class="module-view active-view fade-in">
-                    <div class="module-header sql-border">
-                        <h2>1. Data Foundry: Extracción y Normalización</h2>
-                        <p>Aprende a cruzar tablas y extraer métricas maestras utilizando las herramientas corporativas de SQL.</p>
+                <!-- Módulo 1: Excel -->
+                <section id="excel" class="module-view active-view fade-in">
+                    <div class="module-header excel-border">
+                        <h2>1. Ecosistema de Análisis y Automatización (Excel)</h2>
+                        <p>Excel ha evolucionado de ser una cuadrícula digital básica a un cliente de Business Intelligence (BI) avanzado que soporta lenguajes de scripting modernos y motores de transformación de datos masivos.</p>
                     </div>
-                    <!-- Contenido inmersivo de SQL inyectado -->
-                    <div class="card glass-card theory-content">
-                        <h3>Data Wrangling Orientado a Churn</h3>
-                        <p>El "Data Wrangling" (o doma de datos) es el proceso fundamental de transformar datos crudos y dispersos en un formato estructurado y analizable. En el contexto del E-Commerce Churn, la meta es crear un "Dataset Plano" (flattened dataset) donde cada fila represente un cliente único, concatenado a la totalidad de su historial transaccional y métricas de inactividad.</p>
-                        
-                        <h3>La Defensa del LEFT JOIN</h3>
-                        <p>¿Por qué <code>LEFT JOIN</code> es sagrado en el análisis de retención? Imagina que realizas un <code>INNER JOIN</code> clásico entre la tabla <code>Customers</code> (todos los registrados) y la tabla <code>Orders</code> (las transacciones facturadas). El motor SQL interceptará las llaves y <strong>destruirá</strong> (omitirá) inmediatamente a todos los clientes que se registraron pero que nunca compraron nada. Al perder esos registros, pierdes la visibilidad entera del 'Early Churn' (usuarios que rebotan sin generar ganancias). Con <strong>LEFT JOIN</strong> garantizas que tu tabla madre dictamine la integridad del ecosistema de datos, manteniendo los perfiles intactos y rellenando con valores <code>NULL</code> aquellas áreas sin facturación, las cuales más tarde el Analytic Engine de Python utilizará como poderosas banderas para sus algoritmos predictivos.</p>
-                        
-                        <div class="code-snippet">
-                            <pre><code>-- Ejemplo de una extracción segura para un data pipeline.
-SELECT c.customer_id, 
-       c.signup_date,
-       o.order_date, 
-       o.total_amount
-FROM customers c
-LEFT JOIN orders o ON c.customer_id = o.customer_id;</code></pre>
-                        </div>
+                    <div id="grid-excel" class="cards-grid">
+                        <!-- Las tarjetas se inyectarán por Fetch JS simulando un Backend -->
                     </div>
                 </section>
 
-                <!-- Módulo 2: Python Analytic Engine -->
+                <!-- Módulo 2: SQL Data Foundry -->
+                <section id="sql" class="module-view hidden">
+                    <div class="module-header sql-border">
+                        <h2>2. Data Foundry (Gestión de Bases de Datos Relacionales)</h2>
+                        <p>SQL es el estándar para interactuar con sistemas de gestión de bases de datos relacionales (RDBMS) como MySQL, PostgreSQL y Google BigQuery.</p>
+                    </div>
+                    <div id="grid-sql" class="cards-grid">
+                        <!-- Generado dinámicamente -->
+                    </div>
+                </section>
+
+                <!-- Módulo 3: Python Analytic Engine -->
                 <section id="python" class="module-view hidden">
                     <div class="module-header python-border">
-                        <h2>2. Analytic Engine: Python & Pandas</h2>
-                        <p>Limpia vectores nulos y construye un modelo de categorización RFM puro.</p>
+                        <h2>3. Analytic Engine (El Cerebro Analítico Distribuido)</h2>
+                        <p>Python es el lenguaje estándar para análisis avanzado, automatización y ciencia de datos debido a su sintaxis legible y ecosistema robusto.</p>
                     </div>
-                    <div class="card glass-card theory-content">
-                        <h3>Anatomía del Modelo Predictivo RFM</h3>
-                        <p>En la ingesta de Machine Learning, el modelo de Segmentación <strong>RFM (Recency, Frequency, Monetary)</strong> actúa como un radar forense sobre el comportamiento del usuario. Es una de las metodologías cuantitativas más implacables y certeras.</p>
-                        <p>De las tres variables, la <strong>Recencia (Recency)</strong> es el predictor absoluto supremo para detectar el Churn. La Recencia responde a una pregunta matemática sencilla: <em>¿Hace cuántos días ocurrió el último latido financiero (transacción) del cliente?</em>. La teoría indica que la probabilidad del usuario para generar una nueva compra cae exponencialmente según aumenten los días inactivos. Si un cliente tenía una alta Frecuencia (F) y un Monetary Value alto (M), pero su Recencia actual supera drásticamente su tiempo promedio de recompra, estamos ante un caso claro de fuga (Churn) VIP inminente.</p>
-                        
-                        <h3>El Rol de Pandas en el Engine Analítico</h3>
-                        <p>La inyección de los datos brutos provenientes de SQL necesita una curaduría refinada. Los vectores <code>NULL</code> dejados sistemáticamente por los <code>LEFT JOIN</code> no son vacíos accidentales: son valiosa información de no-ingreso. Mediante el poder de la librería `pandas`, imputamos o llenamos (`fillna()`) esos campos para normalizar el tensor de entrada de los algoritmos e impedir rupturas de compilación en el eventual clasificador entrenado con `Scikit-Learn`.</p>
-                        
-                        <div class="code-snippet">
-                            <pre><code>import pandas as pd
-import numpy as np
-
-# Ingesta
-df = pd.read_csv('datasets_ejemplo.csv')
-
-# Ingeniería del Modelo RFM - Cálculo de Recencia Matemática
-# (Usando una fecha de corte simulada)
-corte_tiempo = pd.to_datetime('2025-01-01')
-
-rfm_engine = df.groupby('customer_id').agg({
-    'last_purchase_date': lambda x: (corte_tiempo - pd.to_datetime(x.max())).days,
-    'order_id': 'count',
-    'total_spent': 'sum'
-}).rename(columns={
-    'last_purchase_date': 'Recency',
-    'order_id': 'Frequency',
-    'total_spent': 'Monetary'
-})
-
-print(rfm_engine.sort_values(by="Recency", ascending=False).head())</code></pre>
-                        </div>
+                    <div id="grid-python" class="cards-grid">
+                        <!-- Generado dinámicamente -->
                     </div>
                 </section>
 
-                <!-- Módulo 3: Excel Exec Front-end -->
-                <section id="excel" class="module-view hidden">
-                    <div class="module-header excel-border">
-                        <h2>3. Executive Front-end: Dashboards Reales</h2>
-                        <p>Presenta los insights procesados en una interfaz que los tomadores de decisiones entiendan.</p>
+                <!-- Módulo 4: GITHUB -->
+                <section id="github" class="module-view hidden">
+                    <div class="module-header github-border">
+                        <h2>🐙 GitHub Master: Hub de Colaboración</h2>
+                        <p>Domina Git y GitHub para gestionar el control de versiones, proteger tu progreso analítico y colaborar globalmente en producción.</p>
                     </div>
-                    <div class="card glass-card theory-content">
-                        <h3>Storytelling con Datos (El Rol Ejecutivo)</h3>
-                        <p>El código más avanzado del mundo no tiene ningún impacto si el CEO de tu compañía no logra asimilar la urgencia de la información. Excel y Power BI encarnan el 'Executive Front-End', donde la rigurosidad matemática se transforma en **Storytelling Técnico**.</p>
-                        
-                        <h3>Focalización a través de la Paleta de Colores</h3>
-                        <p>Diseñar un Dashboard no es pintar de colores variopintos una gráfica; es dirigir el ojo del ejecutivo hacia la decisión. La semiótica (el uso del color) en el cálculo de Retention Rate sigue un principio biológico de urgencia:</p>
-                        <ul>
-                            <li><strong>Alerta Crítica (Rojos/Carmesí):</strong> Se destinan visualmente a los KPIs representativos de clientes desertores (Churn alto). Inmediatamente inyectan la sensación de peligro financiero o fuga de ingresos.</li>
-                            <li><strong>Validación Positiva (Verdes/Esmeralda):</strong> Reservados exclusivamente para las cohortes de clientes que se han retenido, destacando el LTV (Life Time Value) positivo y confirmando la lealtad con seguridad táctica.</li>
-                            <li><strong>Información Neutral (Grises/Azules oscuros):</strong> Constituyen el fondo y las tablas base de lectura de tendencias, nunca desvían la atención ni cansan la vista del Directivo (Dark Mode UX).</li>
-                        </ul>
-                        
-                        <h3>Automatización Escalable con Power Query</h3>
-                        <p>Para lograr que este dashboard viva y respire, se enruta mediante *M Language* dentro del Editor Avanzado. Con esto, liberas al área analítica de "abrir archivos", dejando que el proceso ingiera autónomamente los tensores que produjo Python la noche interior, actualizando el lienzo del C-Level en un solo clic.</p>
-                        
-                        <div class="code-snippet">
-                            <pre><code>let
-    // Pipeline Ejecutivo
-    Origen = Csv.Document(File.Contents("C:\Pipeline_Cloud\modelo_rfm_predictivo.csv"),
-    [Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
-    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars=true]),
-    Filtro_Retenidos = Table.SelectRows(Encabezados, each ([is_churned] <> "True")),
-    Transformar_Numericos = Table.TransformColumnTypes(Filtro_Retenidos,{{"Recency", Int64.Type}, {"Monetary", type number}})
-in
-    Transformar_Numericos</code></pre>
-                        </div>
+                    <div id="grid-github" class="cards-grid">
+                        <!-- Generado dinámicamente -->
                     </div>
                 </section>
 
-                <!-- Módulo 4: Master Lab -->
+                <!-- Módulo 5: INTEGRACIÓN PROFESIONAL -->
+                <section id="integration" class="module-view hidden">
+                    <div class="module-header" style="border-bottom-color: #d946ef;">
+                        <h2>⚙️ Flujo de Trabajo Profesional Integral</h2>
+                        <p>En 2026, el éxito analítico reside en la interoperabilidad circular de las tres herramientas.</p>
+                    </div>
+                    <div id="grid-integration" class="cards-grid">
+                        <!-- Generado dinámicamente -->
+                    </div>
+                </section>
+
+                <!-- Módulo 6: Master Lab -->
                 <section id="master-lab" class="module-view hidden">
                     <div class="module-header lab-border">
                         <h2>🏆 Laboratorio Maestro: Simulador Pipeline</h2>
-                        <p>Supera los 15 niveles integrando todo lo aprendido. Tu progreso se guardará localmente.</p>
+                        <p>Supera los 10 niveles integrando todo lo aprendido. Tu progreso se guardará localmente.</p>
                     </div>
                     <!-- Layout del Laboratorio interactivo Terminal PRO -->
                     <div class="lab-container fade-in">
@@ -217,6 +196,7 @@ in
     <!-- Scripts -->
     <script src="js/storage.js"></script>
     <script src="js/simulator.js"></script>
+    <script src="js/backend.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -98,3 +98,19 @@ function showDataPreview() {
 
     previewContainer.innerHTML = html;
 }
+
+/**
+ * Función para alternar el estado de un acordeón en el UI inmersivo.
+ * @param {HTMLElement} element - El header del acordeón clickeado.
+ */
+function toggleAccordion(element) {
+    const item = element.parentElement;
+    
+    // Opcional: Cerrar otros acordeones dentro del mismo wrapper
+    // const wrapper = item.parentElement;
+    // wrapper.querySelectorAll('.accordion-item').forEach(acc => {
+    //     if(acc !== item) acc.classList.remove('open');
+    // });
+
+    item.classList.toggle('open');
+}

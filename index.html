@@ -62,31 +62,39 @@
                     </div>
                 </div>
 
-                <!-- EXCEL SANDBOX SIMULATOR (V4.5) -->
+                <!-- EXCEL SANDBOX SIMULATOR (V4.5 Live) -->
                 <div class="excel-sandbox-box hidden" id="excel-sandbox">
+                    <!-- Ribbon simulado -->
+                    <div class="excel-ribbon">
+                        <span class="ribbon-tab active">Inicio</span>
+                        <span class="ribbon-tab">Insertar</span>
+                        <span class="ribbon-tab">Datos</span>
+                        <span class="excel-filename">📊 ejercicio_practica.xlsx</span>
+                    </div>
+                    <!-- Barra de nombre de celda + barra fx -->
                     <div class="excel-header">
+                        <input type="text" id="excel-cell-name" class="excel-cell-name" value="C6" readonly>
                         <span class="fx-icon">fx</span>
-                        <input type="text" id="excel-formula-bar" class="excel-input" placeholder="Ingresa función (=VLOOKUP...)" onkeydown="if(event.key === 'Enter') verifyExcelLab()">
+                        <input type="text" id="excel-formula-bar" class="excel-input"
+                            placeholder="Ingresa función aquí (ej: =RAIZ(144))"
+                            oninput="onFormulaInput(this.value)"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();verifyExcelLab();}">
                         <button class="btn-run excel-btn" onclick="verifyExcelLab()">✓</button>
                     </div>
+                    <!-- Grid interactivo -->
                     <div class="excel-grid-container">
-                        <table class="excel-grid">
-                            <thead>
-                                <tr>
-                                    <th></th><th>A</th><th>B</th><th>C</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="row-num">1</td><td class="cell" onclick="selectCell(this, 'A1')">Data A</td><td class="cell" onclick="selectCell(this, 'B1')">Data B</td><td class="cell" onclick="selectCell(this, 'C1')">100</td></tr>
-                                <tr><td class="row-num">2</td><td class="cell" onclick="selectCell(this, 'A2')">Data C</td><td class="cell" onclick="selectCell(this, 'B2')">Data D</td><td class="cell" onclick="selectCell(this, 'C2')">200</td></tr>
-                                <tr><td class="row-num">3</td><td class="cell" onclick="selectCell(this, 'A3')">Total</td><td class="cell" onclick="selectCell(this, 'B3')">...</td><td class="cell highlight-cell" onclick="selectCell(this, 'C3')"></td></tr>
-                            </tbody>
+                        <table class="excel-grid" id="excel-grid-table">
+                            <!-- Generado dinámicamente por buildExcelGrid() -->
                         </table>
+                        <!-- Overlay modo hardware -->
                         <div class="key-listener-overlay hidden" id="key-listener-overlay">
-                            <span class="blink-cursor">Misión de Hardware activa. Presiona las teclas requeridas...</span>
+                            <div class="hw-prompt">
+                                <div class="hw-keys" id="hw-keys-display"></div>
+                                <span class="blink-cursor">Presiona las teclas requeridas en tu teclado...</span>
+                            </div>
                         </div>
                     </div>
-                    <div id="excel-feedback" class="excel-feedback">> Esperando evento/fórmula...</div>
+                    <div id="excel-feedback" class="excel-feedback">> Inicializando spreadsheet...</div>
                 </div>
 
             </div>

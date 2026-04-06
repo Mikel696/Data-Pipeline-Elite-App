@@ -45,53 +45,30 @@ const functionDatabase = {
         { "id":"ex-24","titulo":"Tablas Dinámicas + Slicers","categoria":"Tablas Dinámicas","descripcion":"Resumen millones de filas en segundos. Los Slicers permiten filtrado interactivo visual. Usar 'Conexiones de informe' para controlar múltiples pivots.","codigo":"1. Insertar → Tabla Dinámica\n2. Insertar → Segmentación de datos\n3. Clic derecho → Conexiones de informe" }
     ],
     "sql": [
-
-        { "id":"sq-1",  "titulo":"SELECT DISTINCT / LIMIT",  "categoria":"Sintaxis Básica",           "descripcion":"DISTINCT colapsa duplicados. LIMIT restringe el número de filas para no destruir la memoria del motor.",      "codigo":"SELECT DISTINCT user_id FROM logs LIMIT 100;" },
-        { "id":"sq-2",  "titulo":"Filtrado WHERE, AND, IN",  "categoria":"Sintaxis Básica",           "descripcion":"Poda primaria PRE-agrupación. IN reemplaza múltiples OR.",                                                  "codigo":"SELECT * FROM ventas\nWHERE pais IN ('CO','MX') AND monto > 0;" },
-        { "id":"sq-3",  "titulo":"INNER JOIN",               "categoria":"Uniones Relacionales",      "descripcion":"Retorna únicamente los registros con coincidencia en AMBAS tablas.",                                        "codigo":"SELECT u.nombre, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;" },
-        { "id":"sq-4",  "titulo":"LEFT JOIN",                "categoria":"Uniones Relacionales",      "descripcion":"Todos los de la izquierda + coincidencias de la derecha. NULL donde no hay match.",                         "codigo":"SELECT u.nombre, o.total\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id;" },
-        { "id":"sq-5",  "titulo":"FULL OUTER JOIN",          "categoria":"Uniones Relacionales",      "descripcion":"Combina todo de ambos lados, rellenando NULL donde no hay coincidencia.",                                   "codigo":"SELECT * FROM A FULL OUTER JOIN B ON A.id = B.id;" },
-        { "id":"sq-6",  "titulo":"ANTI-JOIN",                "categoria":"Uniones Relacionales",      "descripcion":"Encuentra registros en A sin correspondencia en B. Detecta clientes sin pedidos.",                          "codigo":"SELECT u.id FROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nWHERE o.user_id IS NULL;" },
-        { "id":"sq-7",  "titulo":"SUM / AVG / COUNT",        "categoria":"Agregación",                "descripcion":"Colapsan millones de filas en KPIs. Siempre requieren GROUP BY si hay dimensiones.",                        "codigo":"SELECT region, SUM(monto), AVG(monto)\nFROM ventas GROUP BY region;" },
-        { "id":"sq-8",  "titulo":"GROUP BY vs HAVING",       "categoria":"Agregación",                "descripcion":"HAVING filtra POST-agregación; WHERE filtra PRE-agrupación.",                                              "codigo":"SELECT user_id, COUNT(*) as n\nFROM orders\nGROUP BY user_id HAVING COUNT(*) > 5;" },
-        { "id":"sq-9",  "titulo":"ROW_NUMBER()",             "categoria":"Window Functions",          "descripcion":"Enumera filas dentro de cada partición sin comprimir el dataset.",                                          "codigo":"ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY date DESC)" },
-        { "id":"sq-10", "titulo":"RANK() / DENSE_RANK()",    "categoria":"Window Functions",          "descripcion":"DENSE_RANK no salta números en empates. Ideal para Top-N rankings.",                                       "codigo":"DENSE_RANK() OVER(ORDER BY ventas DESC) as ranking" },
-        { "id":"sq-11", "titulo":"LAG() / LEAD()",           "categoria":"Window Functions",          "descripcion":"LAG trae valor de fila anterior; LEAD de la siguiente. Para calcular días entre compras.",                 "codigo":"LAG(order_date) OVER(PARTITION BY user_id ORDER BY order_date)" },
-        { "id":"sq-12", "titulo":"NTILE()",                  "categoria":"Window Functions",          "descripcion":"Divide la población en N bloques iguales. Perfecto para cuartiles RFM.",                                   "codigo":"NTILE(4) OVER(ORDER BY monto DESC) as cuartil" },
-        { "id":"sq-13", "titulo":"CTEs (WITH)",              "categoria":"Subconsultas",              "descripcion":"Nombra subqueries como tablas temporales. Elimina los horribles subqueries anidados.",                     "codigo":"WITH activos AS (\n  SELECT * FROM users WHERE activo=1\n)\nSELECT * FROM activos;" },
-        { "id":"sq-14", "titulo":"EXPLAIN ANALYZE",          "categoria":"Optimización",              "descripcion":"Muestra el plan de ejecución real. Revela Index Scans vs Full Table Scans.",                              "codigo":"EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 42;" }
+        { "id":"sq-1",  "titulo":"SELECT DISTINCT",          "categoria":"Sintaxis Básica",           "descripcion":"DISTINCT colapsa duplicados en el set de resultados, crucial para hallar valores únicos como IDs de usuarios activos. LIMIT restringe el número de filas.", "codigo":"SELECT DISTINCT user_id\nFROM logs\nLIMIT 100;" },
+        { "id":"sq-3",  "titulo":"INNER JOIN",               "categoria":"Uniones Relacionales",      "descripcion":"Retorna únicamente los registros con coincidencia exacta en las llaves de ambas tablas. Es el más eficiente para cruzar entidades (ej. Usuarios con Compras).", "codigo":"SELECT u.nombre, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;" },
+        { "id":"sq-7",  "titulo":"Agregaciones (SUM/AVG)",   "categoria":"Agregación",                "descripcion":"Funciones que colapsan millones de filas en KPIs de negocio. Siempre requieren GROUP BY si se mezclan con columnas dimensionales.", "codigo":"SELECT region, SUM(monto)\nFROM ventas\nGROUP BY region;" },
+        { "id":"sq-13", "titulo":"CTEs (WITH)",              "categoria":"Subconsultas",              "descripcion":"Las Common Table Expressions (CTE) mejoran la legibilidad y permiten organizar queries jerárquicamente. Reemplazan subqueries anidadas.", "codigo":"WITH activos AS (\n  SELECT * FROM users WHERE status='active'\n)\nSELECT * FROM activos;" }
     ],
     "python": [
-        { "id":"py-1",  "titulo":"Listas y Diccionarios",    "categoria":"Estructuras Nativas",      "descripcion":"Vectores mutables y mapas clave-valor. Columna vertebral de cualquier pipeline.",                          "codigo":"clientes = [{'id':1,'nombre':'Ana'},{'id':2,'nombre':'Luis'}]" },
-        { "id":"py-2",  "titulo":"Tuplas y Sets",            "categoria":"Estructuras Nativas",      "descripcion":"Tuplas inmutables para coordenadas/configs. Sets para deduplicar IDs.",                                   "codigo":"coords = (4.61, -74.08)\nunique_ids = set([1,2,2,3])  # {1,2,3}" },
-        { "id":"py-3",  "titulo":"for / while / if-elif",   "categoria":"Control de Flujo",         "descripcion":"Iteradores y condicionales. Base de cualquier pipeline de transformación.",                                "codigo":"for c in clientes:\n    if c['gasto'] > 1000: print('VIP')" },
-        { "id":"py-4",  "titulo":"Funciones Lambda",         "categoria":"Funciones y Decoradores",  "descripcion":"Funciones anónimas desechables. Ideales para .apply() sobre columnas Pandas.",                           "codigo":"df['seg'] = df['gasto'].apply(lambda x: 'VIP' if x > 1000 else 'Std')" },
-        { "id":"py-5",  "titulo":"Decoradores (@)",          "categoria":"Funciones y Decoradores",  "descripcion":"Envuelven una función añadiendo lógica (ej. timing, logging) sin modificar su cuerpo.",                  "codigo":"@timer\ndef cargar(): df = pd.read_csv('ventas.csv'); return df" },
-        { "id":"py-6",  "titulo":"df.head() / describe()",   "categoria":"Pandas Exploración",       "descripcion":"head() muestra primeras filas. describe() genera estadísticas: count, mean, std, min, max.",              "codigo":"df.head(10)\ndf.describe().T" },
-        { "id":"py-7",  "titulo":"df.info()",                "categoria":"Pandas Exploración",       "descripcion":"Audita dtypes, conteo de no-nulos y uso de memoria por columna.",                                        "codigo":"df.info()" },
-        { "id":"py-8",  "titulo":"df.dropna()",              "categoria":"Limpieza Wrangling",       "descripcion":"Elimina filas/columnas con NaN. axis=0: filas; axis=1: columnas; subset para columnas específicas.",     "codigo":"df.dropna(axis=0)\ndf.dropna(subset=['email'])" },
-        { "id":"py-9",  "titulo":"df.fillna()",              "categoria":"Limpieza Wrangling",       "descripcion":"Imputa NaN con media, mediana o constante para preservar el volumen del dataset.",                       "codigo":"df['edad'].fillna(df['edad'].median(), inplace=True)" },
-        { "id":"py-10", "titulo":"df.astype()",              "categoria":"Limpieza Wrangling",       "descripcion":"Convierte dtype de la columna. Crítico para parsear fechas, enteros o categóricas.",                     "codigo":"df['precio'] = df['precio'].astype('float64')" },
-        { "id":"py-11", "titulo":"df.drop_duplicates()",     "categoria":"Limpieza Wrangling",       "descripcion":"Elimina filas duplicadas. keep='last' conserva la más reciente.",                                        "codigo":"df.drop_duplicates(subset=['email'], keep='last')" },
-        { "id":"py-12", "titulo":"df.groupby()",             "categoria":"Transformación Tabular",   "descripcion":"Agrupa y agrega. Equivalente al GROUP BY de SQL en memoria RAM.",                                        "codigo":"rfm = df.groupby('id').agg(freq=('orden','count'),mon=('monto','sum'))" },
-        { "id":"py-13", "titulo":"df.merge()",               "categoria":"Transformación Tabular",   "descripcion":"JOIN entre DataFrames. how='left','right','inner','outer'.",                                             "codigo":"pd.merge(clientes, ordenes, on='id', how='left')" },
-        { "id":"py-14", "titulo":"Seaborn: heatmap/kdeplot", "categoria":"Visualización Científica", "descripcion":"heatmap muestra correlaciones. kdeplot muestra distribución de densidad.",                              "codigo":"sns.heatmap(df.corr(), annot=True, cmap='coolwarm')" }
+        { "id":"py-1",  "titulo":"Listas y Diccionarios",    "categoria":"Estructuras Nativas",      "descripcion":"Vectores mutables (list) y mapas hash (dict). Son las unidades fundamentales de transferencia de datos en APIs REST y pipelines locales.", "codigo":"item = {'id':1,'val':380}\nlista = ['Ana','Luis']" },
+        { "id":"py-4",  "titulo":"Funciones Lambda",         "categoria":"Funciones y Decoradores",  "descripcion":"Funciones anónimas de una sola línea. En análisis de datos, se usan casi exclusivamente dentro de `.apply()` para transformaciones columna a columna rápidas.", "codigo":"df['seg'] = df['gasto'].apply(lambda x: 'VIP' if x > 1000 else 'Std')" },
+        { "id":"py-6",  "titulo":"Pandas: Exploración",       "categoria":"Pandas Core",              "descripcion":"`.head()` permite verificar la correcta carga del dataset, mientras que `.describe()` arroja un resumen estadístico (cuartiles, media, std) de todas las columnas numéricas.", "codigo":"df.head(10)\ndf.describe().T" },
+        { "id":"py-8",  "titulo":"Limpieza de NaNs",         "categoria":"Data Wrangling",           "descripcion":"`.dropna()` elimina ruidos que podrían sesgar cálculos estadísticos. Se puede filtrar por filas (`axis=0`) o columnas (`axis=1`).", "codigo":"df.dropna(subset=['email'], inplace=True)" },
+        { "id":"py-12", "titulo":"Group & Aggregate",       "categoria":"Transformación Tabular",   "descripcion":"Indispensable para reportes RFM o agregaciones temporales. `.groupby()` bloquea dimensiones y `.agg()` aplica funciones matemáticas personalizadas sobre ellas.", "codigo":"df.groupby('id').agg({'monto':'sum','user':'count'})" },
+        { "id":"py-13", "titulo":"Pandas Merge (JOIN)",      "categoria":"Transformación Tabular",   "descripcion":"Equivalente al JOIN de SQL en RAM. Permite conectar fuentes heterogéneas (ej: un CSV de ventas con un JSON de perfiles) mediante llaves comunes.", "codigo":"pd.merge(clientes, ordenes, on='id', how='left')" },
+        { "id":"py-14", "titulo":"Seaborn: Correlación",      "categoria":"Visualización Científica", "descripcion":"`heatmap` visualiza la matriz de correlación entre variables. Clave para hallar predictores de Churn antes de entrenar un modelo de Machine Learning.", "codigo":"sns.heatmap(df.corr(), annot=True, cmap='viridis')" }
     ],
     "github": [
-        { "id":"gh-1", "titulo":"git config",          "categoria":"Configuración Core",   "descripcion":"Define identidad del desarrollador. Obligatorio para firmar commits.",                                        "codigo":"git config --global user.name \"Tu Nombre\"\ngit config --global user.email \"tu@email.com\"" },
-        { "id":"gh-2", "titulo":"git init / clone",    "categoria":"Configuración Core",   "descripcion":"init crea repositorio local. clone descarga copia completa del remoto.",                                     "codigo":"git init\ngit clone https://github.com/usuario/repo.git" },
-        { "id":"gh-3", "titulo":"git status",          "categoria":"Flujo Workdir",        "descripcion":"Estado del working directory. Rojo = sin staging; Verde = en staging.",                                     "codigo":"git status" },
-        { "id":"gh-4", "titulo":"git add",             "categoria":"Flujo Workdir",        "descripcion":"Mueve cambios al Staging Area. El punto (.) agrega todo.",                                                  "codigo":"git add .\ngit add js/backend.js" },
-        { "id":"gh-5", "titulo":"git commit",          "categoria":"Historia Inmutable",   "descripcion":"Congela staging en hash SHA permanente. El mensaje debe describir el cambio en presente.",                  "codigo":"git commit -m \"feat: Add Excel sandbox v4.5\"" },
-        { "id":"gh-6", "titulo":"git push / pull",     "categoria":"Nube (Origin)",        "descripcion":"push sube commits locales al remoto. pull descarga y fusiona cambios remotos.",                             "codigo":"git push origin main\ngit pull origin main" },
-        { "id":"gh-7", "titulo":"git branch / checkout","categoria":"Seguridad Múltiple",  "descripcion":"branch crea mundos aislados. checkout viaja entre ramas.",                                                  "codigo":"git checkout -b feature/sandbox\ngit checkout main" },
-        { "id":"gh-8", "titulo":"Pull Requests",       "categoria":"Colaboración Corp",    "descripcion":"Solicitud formal de fusión. Tu rama pide integrarse a main tras revisión y CI/CD.",                        "codigo":"git push origin feature/sandbox\n# Luego en GitHub: Compare & Pull Request" },
-        { "id":"gh-9", "titulo":"Forks",               "categoria":"Colaboración Corp",    "descripcion":"Duplicado del repositorio en tu cuenta. Base del Open Source.",                                            "codigo":"# GitHub: Botón Fork\ngit clone https://github.com/TU/repo.git" }
+        { "id":"gh-1", "titulo":"Git Config & Auth",    "categoria":"Configuración Core",   "descripcion":"Establece tu firma digital en el historial. Sin una identidad configurada, Git rechazará tus intentos de commit para preservar la trazabilidad.", "codigo":"git config --global user.name \"Name\"\ngit config --global user.email \"mail\"" },
+        { "id":"gh-4", "titulo":"Git Add (Staging)",    "categoria":"Flujo Workdir",        "descripcion":"Mueve cambios del directorio de trabajo al área de preparación (Staging). Es la 'sala de espera' antes de confirmar una versión inmutable.", "codigo":"git add .\ngit add script.py" },
+        { "id":"gh-5", "titulo":"Git Commit (Atomic)",  "categoria":"Historia Inmutable",   "descripcion":"Crea un punto de restauración permanente en la historia del proyecto. Los commits deben ser 'atómicos': un solo cambio lógico por cada mensaje.", "codigo":"git commit -m \"feat: add churn model\"" },
+        { "id":"gh-6", "titulo":"Git Push / Pull",      "categoria":"Nube (Origin)",        "descripcion":"`push` sincroniza tus commits locales con el servidor remoto (GitHub). `pull` descarga y fusiona los cambios de tus compañeros en tu rama actual.", "codigo":"git push origin main\ngit pull origin main" },
+        { "id":"gh-8", "titulo":"Pull Requests (PR)",    "categoria":"Colaboración",         "descripcion":"El mecanismo de revisión de código por excelencia. Permite proponer cambios a una rama protegida, habilitando discusiones y pruebas automáticas antes del merge.", "codigo":"1. Push rama local\n2. Open PR en GitHub\n3. Review & Merge" }
     ],
     "integration": [
-        { "id":"in-1", "titulo":"=PY() Pandas Engine", "categoria":"Python nativo Excel",  "descripcion":"Microsoft 365 ejecuta Python en Azure desde celdas Excel. xl() accede al rango.",                          "codigo":"=PY(\nimport pandas as pd\ndf = xl(\"Tabla1[#Todos]\", headers=True)\nreturn df.describe()\n)" },
-        { "id":"in-2", "titulo":"Engine SQLAlchemy",   "categoria":"ETL Cero-Fricciones",  "descripcion":"Conecta Pandas a cualquier RDBMS. read_sql() carga queries directamente.",                                "codigo":"from sqlalchemy import create_engine\nengine = create_engine('postgresql://user:pass@host/db')\ndf = pd.read_sql('SELECT * FROM churn', engine)" },
-        { "id":"in-3", "titulo":"df.to_sql()",         "categoria":"ETL Cero-Fricciones",  "descripcion":"Escribe DataFrame a tabla SQL. if_exists='replace' sobreescribe; 'append' agrega.",                       "codigo":"df.to_sql('ml_predictions', engine, if_exists='replace', index=False)" }
+        { "id":"in-1", "titulo":"Pandas xl() Engine",   "categoria":"Python en Excel",      "descripcion":"Accede directamente a rangos y tablas de Excel como objetos DataFrame nativos. Permite usar el poder de limpieza de Pandas sin salir del ecosistema MS.", "codigo":"df = xl(\"Table1[All]\", headers=True)\nreturn df.describe()" },
+        { "id":"in-2", "titulo":"Pandas to SQL",        "categoria":"ETL Pipeline",         "descripcion":"Cierra el ciclo de datos escribiendo los resultados de un análisis Python directamente en una base de datos corporativa para su consumo en dashboards BI.", "codigo":"df.to_sql('reporte_ventas', engine,\nif_exists='replace')" }
     ]
 };
 
@@ -227,83 +204,91 @@ const GRID_CONTEXTS = {
     "ex-24": null
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTEXTOS DE MICRO-LAB (SQL, Python, etc.)
+// ─────────────────────────────────────────────────────────────────────────────
+const MICRO_LAB_CONTEXTS = {
+    // SQL
+    "sq-1":  { title: "Tabla: User_Logs", html: "<table class='micro-lab-table'><thead><tr><th>user_id</th><th>action</th><th>timestamp</th></tr></thead><tbody><tr><td>101</td><td>login</td><td>2026-04-01</td></tr><tr><td>102</td><td>click</td><td>2026-04-01</td></tr><tr><td>101</td><td>logout</td><td>2026-04-01</td></tr></tbody></table>" },
+    "sq-3":  { title: "Schema: Users & Orders", html: "<div style='display:grid; grid-template-columns:1fr 1fr; gap:10px;'><table class='micro-lab-table'><thead><tr><th>u.id</th><th>u.nombre</th></tr></thead><tbody><tr><td>1</td><td>Ana</td></tr><tr><td>2</td><td>Luis</td></tr></tbody></table><table class='micro-lab-table'><thead><tr><th>o.user_id</th><th>o.total</th></tr></thead><tbody><tr><td>1</td><td>500</td></tr><tr><td>1</td><td>200</td></tr></tbody></table></div>" },
+    "sq-7":  { title: "Tabla: Ventas_Global", html: "<table class='micro-lab-table'><thead><tr><th>region</th><th>monto</th><th>vendedor</th></tr></thead><tbody><tr><td>Norte</td><td>1500</td><td>Ana</td></tr><tr><td>Sur</td><td>1200</td><td>Luis</td></tr><tr><td>Norte</td><td>800</td><td>Pedro</td></tr></tbody></table>" },
+    "sq-13": { title: "Contexto: CTE 'activos'", html: "<div class='micro-lab-obj'>-- Vista lógica en memoria --\nactivos = SELECT * FROM users WHERE status='active'</div>" },
+    
+    // Python
+    "py-1":  { title: "Variable: clientes", html: "<div class='micro-lab-obj'>clientes = [\n  {'id': 1, 'nombre': 'Ana'},\n  {'id': 2, 'nombre': 'Luis'}\n]</div>" },
+    "py-4":  { title: "DataFrame: df (Pre-apply)", html: "<table class='micro-lab-table'><thead><tr><th>id</th><th>gasto</th></tr></thead><tbody><tr><td>0</td><td>1200</td></tr><tr><td>1</td><td>450</td></tr></tbody></table>" },
+    "py-6":  { title: "DataFrame: df", html: "<table class='micro-lab-table'><thead><tr><th>id</th><th>gasto</th><th>segmento</th></tr></thead><tbody><tr><td>0</td><td>1200</td><td>VIP</td></tr><tr><td>1</td><td>450</td><td>Std</td></tr><tr><td>2</td><td>890</td><td>Mid</td></tr></tbody></table>" },
+    "py-8":  { title: "DataFrame: df_with_nas", html: "<table class='micro-lab-table'><thead><tr><th>id</th><th>email</th><th>edad</th></tr></thead><tbody><tr><td>0</td><td>ana@mail.com</td><td>25</td></tr><tr><td>1</td><td>NaN</td><td>32</td></tr><tr><td>2</td><td>luis@mail.com</td><td>NaN</td></tr></tbody></table>" },
+    "py-12": { title: "DataFrame: logs", html: "<table class='micro-lab-table'><thead><tr><th>user_id</th><th>monto</th></tr></thead><tbody><tr><td>101</td><td>500</td></tr><tr><td>101</td><td>1200</td></tr><tr><td>102</td><td>450</td></tr></tbody></table>" },
+    "py-13": { title: "Datasets: Clientes + Ordenes", html: "<div style='display:grid; grid-template-columns:1fr 1fr; gap:10px;'><div class='micro-lab-obj'>df_c: [id, nombre]</div><div class='micro-lab-obj'>df_o: [user_id, total]</div></div>" },
+    "py-14": { title: "Matrix: df.corr()", html: "<div class='micro-lab-obj'>[ [1.0, 0.85], [0.85, 1.0] ]\n(Sesgo detectado en Churn)</div>" },
+    
+    // GitHub
+    "gh-1":  { title: "Terminal Config", html: "<div class='micro-lab-obj'>$ git config --list\n(Identity missing or incorrect)</div>" },
+    "gh-4":  { title: "Git Status: Staging Area", html: "<div class='micro-lab-obj'>Changes not staged for commit:\n  modified:   script.py\n  (use \"git add ...\" to stage)</div>" },
+    "gh-5":  { title: "Atomic Commit History", html: "<div class='micro-lab-obj'>[main 55a2b3] feat: add churn model\n1 file changed, 45 insertions(+)</div>" },
+    "gh-8":  { title: "GitHub Flow Visual", html: "<div class='micro-lab-obj'>Main [Protected] <--- PR [Feature]\n(Check: unit-tests PASSED)</div>" },
+    
+    // Integración
+    "in-1":  { title: "Excel Object: xl()", html: "<div class='micro-lab-obj'># Representación del rango A1:C6\n[[Ana, Norte, 380], [Luis, Sur, 620], ...]\n# Pandas cargará esto automáticamente.</div>" },
+    "in-2":  { title: "Pipeline: df.to_sql()", html: "<div class='micro-lab-obj'>Connection: postgresql://db_admin\nStatus: Waiting for write command...</div>" }
+};
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MAPA DE EJERCICIOS — Validadores y tipos
 // ─────────────────────────────────────────────────────────────────────────────
 const EXERCISE_MAP = {
+    // Excel (Hardware)
     "ex-1":  { type:"hardware", key:"ctrl+space",   instruccion:"Presiona Ctrl + Espacio para seleccionar la columna entera.", exito:"¡Ctrl + Espacio detectado! Columna seleccionada." },
     "ex-2":  { type:"hardware", key:"shift+space",  instruccion:"Presiona Shift + Espacio para seleccionar la fila entera.", exito:"¡Shift + Espacio detectado! Fila seleccionada." },
-    // Matemáticas
-    "ex-3":  { type:"formula", regex:/^=SUMA\(B2:B6\)|^=PROMEDIO\(B2:B6\)/i,  instruccion:"Escribe =SUMA(B2:B6) o =PROMEDIO(B2:B6) en la celda marcada.", exito:"¡Correcto!", compute:(f) => f.match(/PROMEDIO/i) ? "431" : "2.255" },
-    "ex-4":  { type:"formula", regex:/^=SUMAR\.SI\.CONJUNTO\(.+\)$/i,          instruccion:"Escribe =SUMAR.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\",B2:B6,\"Laptop\")", exito:"¡SUMAR.SI.CONJUNTO correcto! Total: 1.450", compute:() => "1.450" },
-    "ex-5":  { type:"formula", regex:/^=CONTAR\.SI\.CONJUNTO\(.+\)$/i,         instruccion:"Escribe =CONTAR.SI.CONJUNTO(A2:A6,\"CO\",B2:B6,\"VIP\",C2:C6,\">500\")", exito:"¡CONTAR.SI.CONJUNTO correcto! 2 registros.", compute:() => "2" },
-    "ex-6":  { type:"formula", regex:/^=MAX\.SI\.CONJUNTO\(.+\)|^=MIN\.SI\.CONJUNTO\(.+\)/i, instruccion:"Escribe =MAX.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\")", exito:"¡MAX condicional correcto! Máximo Norte: 890", compute:() => "890" },
-    "ex-7":  { type:"formula", regex:/^=REDONDEAR\(.+,.+\)|^=ENTERO\(.+\)/i,   instruccion:"Escribe =REDONDEAR(A2*1.19, 2) para calcular IVA redondeado.", exito:"¡REDONDEAR correcto!", compute:(f) => { try { return String(Math.round(380*1.19*100)/100); } catch(e){ return "452.20"; } } },
-    // Lógicas
-    "ex-8":  { type:"formula", regex:/^=SI\(.+,SI\(.+\)\)/i,                   instruccion:"Escribe =SI(B2>1000,\"VIP\",SI(B2>500,\"Medio\",\"Básico\"))", exito:"¡SI anidado correcto!", compute:() => "Básico" },
-    "ex-9":  { type:"formula", regex:/^=SI\.CONJUNTO\(.+\)$/i,                  instruccion:"Escribe =SI.CONJUNTO(B2>1000,\"VIP\",B2>500,\"Medio\",B2>0,\"Básico\",VERDADERO,\"Sin ventas\")", exito:"¡SI.CONJUNTO correcto!", compute:() => "Básico" },
-    "ex-10": { type:"formula", regex:/^=SIERROR\(.+\)|^=SINO\.DISPONIBLE\(.+\)/i, instruccion:"Escribe =SIERROR(BUSCARV(A2,Tabla,2,0),\"No encontrado\")", exito:"¡SIERROR correcto! Errores capturados.", compute:() => "No encontrado" },
-    // Texto
-    "ex-11": { type:"formula", regex:/^=IZQUIERDA\(.+\)|^=DERECHA\(.+\)|^=EXTRAE\(.+\)/i, instruccion:"Escribe =IZQUIERDA(A2,2) para extraer el prefijo del código.", exito:"¡Texto extraído!", compute:() => "CO" },
-    "ex-12": { type:"formula", regex:/^=CONCATENAR\(.+\)|^=UNIRCADENAS\(.+\)/i, instruccion:"Escribe =CONCATENAR(A2,\" \",B2) para unir nombre y apellido.", exito:"¡Cadenas unidas!", compute:() => "Ana García" },
-    "ex-13": { type:"formula", regex:/^=TEXTO\(.+,.+\)$/i,                      instruccion:"Escribe =TEXTO(A2,\"$#,##0.00\") para formatear el precio.", exito:"¡TEXTO correcto!", compute:() => "$1,250.00" },
-    "ex-14": { type:"formula", regex:/^=LARGO\(.+\)|^=HALLAR\(.+\)|^=SUSTITUIR\(.+\)/i, instruccion:"Escribe =LARGO(A2) para contar los caracteres del email.", exito:"¡LARGO correcto!", compute:() => "15" },
-    // Fechas
-    "ex-15": { type:"formula", regex:/^=AÑO\(.+\)|^=MES\(.+\)|^=DIA\(.+\)|^=FECHA\(.+\)/i, instruccion:"Escribe =AÑO(A2) para extraer el año de la fecha de pedido.", exito:"¡Función de fecha correcta!", compute:() => "2026" },
-    "ex-16": { type:"formula", regex:/^=HOY\(\)|^=DIAS\.LAB\(.+\)|^=SIFECHA\(.+\)/i,       instruccion:"Escribe =DIAS.LAB(A2,B2) para calcular días hábiles entre fechas.", exito:"¡Días hábiles calculados!", compute:() => "18 días hábiles" },
-    // Búsqueda
-    "ex-17": { type:"formula", regex:/^=BUSCARV\(.+\)$/i,                       instruccion:"Escribe =BUSCARV(A2,$D$2:$E$6,2,FALSO) para buscar el nombre del cliente.", exito:"¡BUSCARV correcto! Resultado: María", compute:() => "María" },
-    "ex-18": { type:"formula", regex:/^=INDICE\(.+,COINCIDIR\(.+\)\)$/i,        instruccion:"Escribe =INDICE(B2:B6,COINCIDIR(D2,A2:A6,0))", exito:"¡INDICE+COINCIDIR correcto! Resultado: 45", compute:() => "45" },
-    "ex-19": { type:"formula", regex:/^=BUSCARX\(.+\)$/i,                       instruccion:"Escribe =BUSCARX(D2,A2:A6,B2:B6,\"No encontrado\",0)", exito:"¡BUSCARX correcto! Resultado: 25", compute:() => "25" },
-    // Matrices
-    "ex-20": { type:"formula", regex:/^=FILTRAR\(.+\)$/i, instruccion:"Escribe =FILTRAR(A2:C6,C2:C6>500,\"Sin resultados\")", exito:"¡FILTRAR dinámico correcto!", compute:() => "Luis (620)\nPedro (890)" },
-    "ex-21": { type:"formula", regex:/^=ORDENAR\(UNICOS\(.+\)\)|^=UNICOS\(.+\)/i, instruccion:"Escribe =ORDENAR(UNICOS(A2:A6)) para ciudades únicas.", exito:"¡UNICOS+ORDENAR correcto!", compute:() => "Bogotá, Cali, Medellín" },
-    "ex-22": { type:"formula", regex:/^=LET\(.+\)$/i, instruccion:"Escribe =LET(tasa,1.19,base,SUMA(B2:B5),base*tasa)", exito:"¡Variable LET calculada!", compute:() => "2,082.50" },
-    // Power Query + Pivot (terminal)
+    // Excel (Fórmulas)
+    "ex-3":  { type:"formula", regex:/^=SUMA\(B2:B6\)|^=PROMEDIO\(B2:B6\)/i, instruccion:"Escribe =SUMA(B2:B6) o =PROMEDIO(B2:B6).", exito:"¡Correcto!", compute:(f) => f.match(/PROMEDIO/i) ? "431" : "2.255" },
+    "ex-4":  { type:"formula", regex:/^=SUMAR\.SI\.CONJUNTO\(.+\)$/i, instruccion:"Escribe =SUMAR.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\",B2:B6,\"Laptop\")", exito:"¡SUMAR.SI.CONJUNTO correcto!", compute:() => "1.450" },
+    "ex-5":  { type:"formula", regex:/^=CONTAR\.SI\.CONJUNTO\(.+\)$/i, instruccion:"Escribe =CONTAR.SI.CONJUNTO(A2:A6,\"CO\",B2:B6,\"VIP\",C2:C6,\">500\")", exito:"¡CONTAR.SI.CONJUNTO correcto!", compute:() => "2" },
+    "ex-6":  { type:"formula", regex:/^=MAX\.SI\.CONJUNTO\(.+\)|^=MIN\.SI\.CONJUNTO\(.+\)/i, instruccion:"Escribe =MAX.SI.CONJUNTO(C2:C6,A2:A6,\"Norte\")", exito:"¡MAX correcto!", compute:() => "890" },
+    "ex-7":  { type:"formula", regex:/^=REDONDEAR\(.+,.+\)|^=ENTERO\(.+\)/i, instruccion:"Escribe =REDONDEAR(B2*1.19, 2).", exito:"¡REDONDEAR correcto!", compute:() => "452.20" },
+    "ex-8":  { type:"formula", regex:/^=SI\(.+,SI\(.+\)\)/i, instruccion:"Escribe =SI(B2>1000,\"VIP\",SI(B2>500,\"Medio\",\"Básico\"))", exito:"¡SI anidado correcto!", compute:() => "Básico" },
+    "ex-9":  { type:"formula", regex:/^=SI\.CONJUNTO\(.+\)$/i, instruccion:"Escribe =SI.CONJUNTO(B2>1000,\"VIP\",B2>500,\"Medio\",B2>0,\"Básico\",VERDADERO,\"Sin ventas\")", exito:"¡SI.CONJUNTO correcto!", compute:() => "Básico" },
+    "ex-10": { type:"formula", regex:/^=SIERROR\(.+\)|^=SINO\.DISPONIBLE\(.+\)/i, instruccion:"Escribe =SIERROR(BUSCARV(A2,Tabla,2,0),\"No encontrado\")", exito:"¡SIERROR correcto!", compute:() => "No encontrado" },
+    "ex-11": { type:"formula", regex:/^=IZQUIERDA\(.+\)|^=DERECHA\(.+\)|^=EXTRAE\(.+\)/i, instruccion:"Escribe =IZQUIERDA(A2,2).", exito:"¡Texto extraído!", compute:() => "CO" },
+    "ex-12": { type:"formula", regex:/^=CONCATENAR\(.+\)|^=UNIRCADENAS\(.+\)/i, instruccion:"Escribe =CONCATENAR(A2,\" \",B2).", exito:"¡Cadenas unidas!", compute:() => "Ana García" },
+    "ex-13": { type:"formula", regex:/^=TEXTO\(.+,.+\)$/i, instruccion:"Escribe =TEXTO(A2,\"$#,##0.00\").", exito:"¡TEXTO correcto!", compute:() => "$1,250.00" },
+    "ex-14": { type:"formula", regex:/^=LARGO\(.+\)|^=HALLAR\(.+\)|^=SUSTITUIR\(.+\)/i, instruccion:"Escribe =LARGO(A2).", exito:"¡LARGO correcto!", compute:() => "15" },
+    "ex-15": { type:"formula", regex:/^=AÑO\(.+\)|^=MES\(.+\)|^=DIA\(.+\)|^=FECHA\(.+\)/i, instruccion:"Escribe =AÑO(A2).", exito:"¡Año extraído!", compute:() => "2026" },
+    "ex-20": { type:"formula", regex:/^=FILTRAR\(.+\)$/i, instruccion:"Escribe =FILTRAR(A2:C6,C2:C6>500,\"Sin resultados\")", exito:"¡FILTRAR correcto!", compute:() => "Luis, Pedro" },
+    "ex-21": { type:"formula", regex:/^=ORDENAR\(UNICOS\(.+\)\)|^=UNICOS\(.+\)/i, instruccion:"Escribe =ORDENAR(UNICOS(A2:A6)).", exito:"¡UNICOS+ORDENAR correcto!", compute:() => "Bogotá, Cali, Medellín" },
+    "ex-22": { type:"formula", regex:/^=LET\(.+\)$/i, instruccion:"Escribe =LET(tasa,1.19,base,SUMA(B2:B5),base*tasa)", exito:"¡LET correcto!", compute:() => "2,082.50" },
+    
+    // BI (Terminal)
     "ex-23": { type:"terminal", regex:/Table\.(SelectRows|Buffer)\(/i, instruccion:"Escribe: Table.SelectRows(Source, each [Region]=\"Norte\")", exito:"¡Power Query M correcto!" },
-    "ex-24": { type:"terminal", regex:/slicer|segmentacion|segmentación|tabla dinámica|pivot/i, instruccion:"Describe: 1. Insertar Tabla Dinámica  2. Insertar Segmentador  3. Conexiones de informe", exito:"¡Flujo Pivot+Slicer correcto!" },
+    "ex-24": { type:"terminal", regex:/slicer|segmentacion|segmentación|tabla dinámica|pivot/i, instruccion:"Explica el flujo: 1. Pivot  2. Slicer  3. Conexiones", exito:"¡BI Workflow correcto!" },
 
-    "sq-1":  { type:"terminal", regex:/SELECT\s+DISTINCT/i, instruccion:"Escribe SELECT DISTINCT user_id FROM logs LIMIT 100;", exito:"¡SELECT DISTINCT correcto!" },
-    "sq-2":  { type:"terminal", regex:/WHERE.+(IN\s*\(|AND|OR)/i, instruccion:"Filtra con WHERE pais IN ('CO','MX').", exito:"¡WHERE + IN correcto!" },
-    "sq-3":  { type:"terminal", regex:/INNER\s+JOIN/i, instruccion:"Escribe un INNER JOIN entre users y orders.", exito:"¡INNER JOIN correcto!" },
-    "sq-4":  { type:"terminal", regex:/LEFT\s+JOIN/i, instruccion:"Escribe un LEFT JOIN de users a orders.", exito:"¡LEFT JOIN correcto!" },
-    "sq-5":  { type:"terminal", regex:/FULL\s+(OUTER\s+)?JOIN/i, instruccion:"Escribe FULL OUTER JOIN entre tabla A y B.", exito:"¡FULL OUTER JOIN correcto!" },
-    "sq-6":  { type:"terminal", regex:/LEFT\s+JOIN[\s\S]+IS\s+NULL/i, instruccion:"ANTI-JOIN: LEFT JOIN + WHERE columna IS NULL.", exito:"¡ANTI-JOIN correcto!" },
-    "sq-7":  { type:"terminal", regex:/SUM\(|AVG\(|COUNT\(/i, instruccion:"SELECT region, SUM(monto) FROM ventas GROUP BY region;", exito:"¡Agregación correcta!" },
-    "sq-8":  { type:"terminal", regex:/HAVING/i, instruccion:"GROUP BY ... HAVING COUNT(*) > 5", exito:"¡HAVING correcto!" },
-    "sq-9":  { type:"terminal", regex:/ROW_NUMBER\(\)\s*OVER/i, instruccion:"ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY date DESC)", exito:"¡ROW_NUMBER correcto!" },
-    "sq-10": { type:"terminal", regex:/DENSE_RANK\(\)|RANK\(\)/i, instruccion:"DENSE_RANK() OVER(ORDER BY ventas DESC)", exito:"¡DENSE_RANK correcto!" },
-    "sq-11": { type:"terminal", regex:/LAG\(|LEAD\(/i, instruccion:"LAG(order_date) OVER(PARTITION BY user_id ORDER BY date)", exito:"¡LAG correcto!" },
-    "sq-12": { type:"terminal", regex:/NTILE\(\d+\)/i, instruccion:"NTILE(4) OVER(ORDER BY monto DESC)", exito:"¡NTILE correcto!" },
-    "sq-13": { type:"terminal", regex:/WITH\s+\w+\s+AS\s*\(/i, instruccion:"WITH activos AS (SELECT * FROM users WHERE activo=1) SELECT * FROM activos;", exito:"¡CTE correcto!" },
-    "sq-14": { type:"terminal", regex:/EXPLAIN(\s+ANALYZE)?/i, instruccion:"EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 42;", exito:"¡EXPLAIN correcto!" },
-    "py-1":  { type:"terminal", regex:/[\[{]/, instruccion:"Crea: clientes = [{'id':1,'nombre':'Ana'}]", exito:"¡Diccionario correcto!" },
-    "py-2":  { type:"terminal", regex:/set\(|tuple\(/i, instruccion:"ids = set([1,2,2,3])", exito:"¡Set correcto!" },
-    "py-3":  { type:"terminal", regex:/for\s+\w+\s+in|while\s+/, instruccion:"Escribe un bucle for sobre una lista.", exito:"¡Bucle correcto!" },
-    "py-4":  { type:"terminal", regex:/lambda/, instruccion:"df['seg'] = df['gasto'].apply(lambda x: 'VIP' if x > 1000 else 'Std')", exito:"¡Lambda correcto!" },
-    "py-5":  { type:"terminal", regex:/@\w+/, instruccion:"@timer sobre una función de carga.", exito:"¡Decorador correcto!" },
-    "py-6":  { type:"terminal", regex:/df\.(head|describe)\(/, instruccion:"df.describe().T", exito:"¡df.describe correcto!" },
-    "py-7":  { type:"terminal", regex:/df\.info\(\)/, instruccion:"df.info()", exito:"¡df.info correcto!" },
-    "py-8":  { type:"terminal", regex:/df\.dropna\(/, instruccion:"df.dropna(axis=0) o df.dropna(subset=['email'])", exito:"¡dropna correcto!" },
-    "py-9":  { type:"terminal", regex:/df\[.+\]\.fillna\(/, instruccion:"df['edad'].fillna(df['edad'].median(), inplace=True)", exito:"¡fillna correcto!" },
-    "py-10": { type:"terminal", regex:/\.astype\(/, instruccion:"df['precio'].astype('float64')", exito:"¡astype correcto!" },
-    "py-11": { type:"terminal", regex:/drop_duplicates\(/, instruccion:"df.drop_duplicates(subset=['email'], keep='last')", exito:"¡drop_duplicates correcto!" },
-    "py-12": { type:"terminal", regex:/groupby\(/, instruccion:"df.groupby('id').agg({'orden':'count','monto':'sum'})", exito:"¡groupby correcto!" },
-    "py-13": { type:"terminal", regex:/pd\.merge\(/, instruccion:"pd.merge(clientes, ordenes, on='id', how='left')", exito:"¡pd.merge correcto!" },
-    "py-14": { type:"terminal", regex:/heatmap\(|kdeplot\(/, instruccion:"sns.heatmap(df.corr(), annot=True)", exito:"¡Seaborn correcto!" },
-    "gh-1":  { type:"terminal", regex:/git\s+config\s+--global/, instruccion:"git config --global user.name \"TuNombre\"", exito:"¡git config correcto!" },
-    "gh-2":  { type:"terminal", regex:/git\s+(init|clone)/, instruccion:"git clone https://github.com/usuario/repo.git", exito:"¡git clone correcto!" },
-    "gh-3":  { type:"terminal", regex:/git\s+status/, instruccion:"git status", exito:"¡git status correcto!" },
-    "gh-4":  { type:"terminal", regex:/git\s+add/, instruccion:"git add .", exito:"¡git add correcto!" },
-    "gh-5":  { type:"terminal", regex:/git\s+commit\s+-m/, instruccion:"git commit -m \"feat: descripción\"", exito:"¡git commit correcto!" },
-    "gh-6":  { type:"terminal", regex:/git\s+(push|pull)/, instruccion:"git push origin main", exito:"¡git push correcto!" },
-    "gh-7":  { type:"terminal", regex:/git\s+(branch|checkout)/, instruccion:"git checkout -b feature/mi-rama", exito:"¡git branch correcto!" },
-    "gh-8":  { type:"terminal", regex:/git\s+push.+origin|pull.request/i, instruccion:"git push origin feature/mi-rama", exito:"¡PR flow correcto!" },
-    "gh-9":  { type:"terminal", regex:/fork|clone.+github/i, instruccion:"Describe el flujo de Fork + clone.", exito:"¡Fork correcto!" },
-    "in-1":  { type:"formula", regex:/^=PY\(/i, instruccion:"Escribe =PY( para iniciar celda Python en Excel.", exito:"¡=PY() correcto!", compute: () => "DataFrame(5×8)" },
-    "in-2":  { type:"terminal", regex:/create_engine\(/, instruccion:"create_engine('postgresql://user:pass@host/db')", exito:"¡SQLAlchemy correcto!" },
-    "in-3":  { type:"terminal", regex:/\.to_sql\(/, instruccion:"df.to_sql('tabla', engine, if_exists='replace')", exito:"¡to_sql correcto!" }
+    // SQL Micro-Labs
+    "sq-1":  { type:"terminal", regex:/SELECT\s+DISTINCT\s+user_id\s+FROM\s+logs/i, instruccion:"SELECT DISTINCT user_id FROM logs LIMIT 100;", exito:"¡Correcto!", compute: () => "Result: [101, 102] (2 rows)" },
+    "sq-3":  { type:"terminal", regex:/INNER\s+JOIN\s+orders/i, instruccion:"SELECT u.nombre, o.total FROM users u INNER JOIN orders o ON u.id = o.user_id;", exito:"¡JOIN correcto!", compute: () => "Result: [Ana: 700, Luis: 0]" },
+    "sq-7":  { type:"terminal", regex:/SUM\(\w+\).+GROUP\s+BY\s+region/i, instruccion:"SELECT region, SUM(monto) FROM ventas GROUP BY region;", exito:"¡Agregación correcta!", compute: () => "Result: [Norte: 2300, Sur: 1200]" },
+    "sq-13": { type:"terminal", regex:/WITH\s+activos\s+AS/i, instruccion:"Escribe un CTE 'activos' filtrando status='active'.", exito:"¡CTE correcto!", compute: () => "CTE 'activos' definida." },
+
+    // Python Micro-Labs (Completo)
+    "py-1":  { type:"terminal", regex:/clientes\s*=\s*[\[{]/, instruccion:"Define la lista 'clientes' con IDs 1 y 2.", exito:"¡Estructura definida!", compute: () => "Memory: clientes <list> en cache." },
+    "py-4":  { type:"terminal", regex:/\.apply\(lambda/, instruccion:"Usa .apply(lambda x: 'VIP' if x > 1000 else 'Std').", exito:"¡Lambda segmentada!", compute: () => "df['seg'] = ['VIP', 'Std']" },
+    "py-6":  { type:"terminal", regex:/df\.describe\(\)/, instruccion:"Ejecuta df.describe() para ver la estadística.", exito:"¡Describe generado!", compute: () => "count: 3.0, mean: 846.6, std: 377.2" },
+    "py-8":  { type:"terminal", regex:/df\.dropna\(subset=\['email'\]\)/, instruccion:"df.dropna(subset=['email'], inplace=True)", exito:"¡NaAs eliminados!", compute: () => "Rows dropped: 1. Clean dataset ready." },
+    "py-12": { type:"terminal", regex:/df\.groupby\(.*\)\.agg\(.*\)/, instruccion:"df.groupby('user_id').agg({'monto':'sum'})", exito:"¡Agregación Pandas OK!", compute: () => "Result: {101: 1700, 102: 450}" },
+    "py-13": { type:"terminal", regex:/pd\.merge\(.*\)/, instruccion:"pd.merge(clientes, ordenes, on='id', how='left')", exito:"¡Datasets unidos!", compute: () => "Combined Dataframe (X rows)" },
+    "py-14": { type:"terminal", regex:/sns\.heatmap\(.*\)/, instruccion:"sns.heatmap(df.corr(), annot=True)", exito:"¡Mapa de calor generado!", compute: () => "Render: Matriz de Correlación [vibrante]" },
+    
+    // GitHub Master (Completo)
+    "gh-1":  { type:"terminal", regex:/git\s+config\s+--global/i, instruccion:"git config --global user.name \"Tu Nombre\"", exito:"¡Identidad establecida!" },
+    "gh-4":  { type:"terminal", regex:/git\s+add\s+\.?/, instruccion:"git add . para pasar archivos a Staging.", exito:"¡Archivos preparados!" },
+    "gh-5":  { type:"terminal", regex:/git\s+commit\s+-m/i, instruccion:"git commit -m \"feat: mensaje atómico\"", exito:"¡Commit inmutable creado!" },
+    "gh-6":  { type:"terminal", regex:/git\s+(push|pull)/i, instruccion:"git push origin main para sincronizar la nube.", exito:"¡Sincronización exitosa con Origin!" },
+    "gh-8":  { type:"terminal", regex:/PR|Merge|Draft/i, instruccion:"Explica el flujo PR: Push → Open PR → Review → Merge.", exito:"¡Flujo de colaboración dominado!" },
+    
+    // Integración (Completo)
+    "in-1":  { type:"terminal", regex:/xl\(.*\)|describe/i, instruccion:"Carga Tabla1 con xl() y aplica .describe().", exito:"¡Excel-Python interoperable!", compute: () => "Pandas read range OK. Statistics generated." },
+    "in-2":  { type:"terminal", regex:/\.to_sql\(.*\)/, instruccion:"df.to_sql('reporte', engine, if_exists='replace')", exito:"¡ETL Pipeline cerrado!", compute: () => "Database WRITE success. 350 rows affected." }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -382,6 +367,19 @@ function openFunctionModal(itemId, themeName) {
     } else {
         excelBox.classList.add('hidden');
         termBox.classList.remove('hidden');
+        
+        // Inyectar contexto de Micro-Lab si existe
+        const preview = document.getElementById('modal-context-preview');
+        const ctx = MICRO_LAB_CONTEXTS[itemId];
+        
+        if (ctx) {
+            preview.innerHTML = `<span class="context-title">${ctx.title}</span>${ctx.html}`;
+            preview.classList.remove('hidden');
+        } else {
+            preview.innerHTML = '';
+            preview.classList.add('hidden');
+        }
+        
         resetTerminalSandbox(data);
     }
 
@@ -559,9 +557,10 @@ function verifyMicroLab() {
     let ok;
     try { ok = currentExercise.regex.test(val); } catch(e) { ok = true; }
     if (ok) {
-        fb.innerHTML   = `> ✅ [SUCCESS] ${currentExercise.exito}`;
+        const result = currentExercise.compute ? currentExercise.compute(val) : '';
+        fb.innerHTML   = `> ✅ [SUCCESS] ${currentExercise.exito}${result ? `\n> ${result}` : ''}`;
         fb.style.color = '#10b981';
-        saveProgress(currentItemId, 'lib'); // Guardar progreso en la biblioteca
+        saveProgress(currentItemId, 'lib'); 
         if (typeof triggerSuccess === 'function') triggerSuccess();
     } else {
         fb.innerHTML   = `> ❌ Sintaxis incorrecta. Pista: ${currentExercise.instruccion}`;

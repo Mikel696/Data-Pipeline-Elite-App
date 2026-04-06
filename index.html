@@ -51,6 +51,10 @@
                     <p id="modal-exercise-desc" style="font-size: 0.9em; color: var(--color-muted);">Instruccion</p>
                 </div>
                 <div class="terminal-box" id="terminal-sandbox" style="box-shadow: none;">
+                    <!-- Previsualización contextual (Tablas SQL / Objetos Python) -->
+                    <div id="modal-context-preview" class="hidden" style="background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border-glass); padding: 10px; max-height: 150px; overflow-y: auto;">
+                        <!-- Se inyectará dinámicamente -->
+                    </div>
                     <div class="terminal-header" style="background:#000">
                         <div class="term-dot dot-r"></div><div class="term-dot dot-y"></div><div class="term-dot dot-g"></div>
                         <span style="margin-left:5px; font-family:'Fira Code'; font-size:0.8em; color:#a5b4fc">sandbox.exe</span>

@@ -877,6 +877,48 @@ body {
     font-size: 0.82em;
     border-top: 2px solid #217346;
 }
+/* =========================================
+   MICRO-LAB CONTEXT PREVIEWS
+   ========================================= */
+.context-title {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 800;
+    display: block;
+}
+
+.micro-lab-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.micro-lab-table th {
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid #334155;
+    color: #f8fafc;
+}
+
+.micro-lab-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.micro-lab-obj {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: var(--color-python);
+    background: rgba(0,0,0,0.4);
+    padding: 8px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    border-left: 3px solid var(--color-python);
+}
 
 
 /* =========================================
